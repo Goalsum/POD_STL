@@ -1,0 +1,108 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义数据操作算法。
+
+#ifndef _PODSTL_NUMERIC_H
+#define _PODSTL_NUMERIC_H
+
+#include "_function_base.h"
+#include "_iterator_base.h"
+
+namespace podstl
+{
+
+template <typename _InputIterator, typename _Tp>
+inline _Tp accumulate(_InputIterator __first, _InputIterator __last, _Tp _Init) 
+{
+    for (; __first != __last; ++__first)
+    {
+        _Init = _Init + *__first;
+    }
+    return _Init;
+}
+
+template <typename _InputIterator, typename _Tp, typename _BinaryOperation>
+inline _Tp accumulate(_InputIterator __first, _InputIterator __last, _Tp _Init, _BinaryOperation __binary_op) 
+{
+    for (; __first != __last; ++__first)
+    {
+        _Init = __binary_op(_Init, *__first);
+    }
+    return _Init;
+}
+
+template <typename _InputIterator1, typename _InputIterator2, typename _Tp>
+inline _Tp inner_product(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _Tp _Init) 
+{
+    for (; __first1 != __last1; ++__first1, ++__first2)
+    {
+        _Init = _Init + (*__first1 * *__first2);
+    }
+    return _Init;
+}
+
+template <typename _InputIterator1, typename _InputIterator2, typename _Tp, typename _BinaryOperation1, typename _BinaryOperation2>
+inline _Tp inner_product(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _Tp _Init, _BinaryOperation1 __binary_op1, _BinaryOperation2 __binary_op2) 
+{
+    for (; __first1 != __last1; ++__first1, ++__first2)
+    {
+        _Init = __binary_op1(_Init, __binary_op2(*__first1, *__first2));
+    }
+    return _Init;
+}
+
+template <typename _InputIterator, typename _OutputIterator, typename _Tp, typename _BinaryOperation>
+_OutputIterator _partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _Tp*, _BinaryOperation __binary_op)
+{
+    if (__first == __last) return __result;
+    *__result = *__first;
+    _Tp __val = *__first;
+    while (++__first != __last) 
+    {
+        __val = __binary_op(__val, *__first);
+        *++__result = __val;
+    }
+    return ++__result;
+}
+
+template <typename _InputIterator, typename _OutputIterator>
+inline _OutputIterator partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __result) 
+{
+    return _partial_sum(__first, __last, __result, _PODSTL_VALUE_TYPE(_InputIterator), _plus(_PODSTL_VALUE_TYPE(_InputIterator)));
+}
+
+template <typename _InputIterator, typename _OutputIterator, typename _BinaryOperation>
+inline _OutputIterator partial_sum(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _BinaryOperation __binary_op) 
+{
+    return _partial_sum(__first, __last, __result, _PODSTL_VALUE_TYPE(_InputIterator), __binary_op);
+}
+
+template <typename _InputIterator, typename _OutputIterator, typename _Tp, typename _BinaryOperation>
+_OutputIterator _adjacent_difference(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _Tp*, _BinaryOperation __binary_op)
+{
+    if (__first == __last) return __result;
+    *__result = *__first;
+    _Tp __val = *__first;
+    while (++__first != __last)
+    {
+        _Tp __tmp = *__first;
+        *++__result = __binary_op(__tmp, __val);
+        __val = __tmp;
+    }
+    return ++__result;
+}
+
+template <typename _InputIterator, typename _OutputIterator>
+inline _OutputIterator adjacent_difference(_InputIterator __first, _InputIterator __last, _OutputIterator __result) 
+{
+    return  _adjacent_difference(__first, __last, __result, _PODSTL_VALUE_TYPE(_InputIterator), _minus(_PODSTL_VALUE_TYPE(_InputIterator)));
+}
+
+template <typename _InputIterator, typename _OutputIterator, typename _BinaryOperation>
+inline _OutputIterator adjacent_difference(_InputIterator __first, _InputIterator __last, _OutputIterator __result, _BinaryOperation __binary_op) 
+{
+    return  _adjacent_difference(__first, __last, __result, _PODSTL_VALUE_TYPE(_InputIterator), __binary_op);
+}
+
+}
+
+#endif // _PODSTL_NUMERIC_H

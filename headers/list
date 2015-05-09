@@ -1,0 +1,445 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义链表容器。
+
+#ifndef _PODSTL_LIST_H
+#define _PODSTL_LIST_H
+
+#include "_algobase.h"
+#include "_iterator.h"
+#include "_construct.h"
+#include "_function_base.h"
+
+namespace podstl
+{
+
+struct _ListNodeBase 
+{
+    _ListNodeBase* __M_next;
+    _ListNodeBase* __M_prev;
+
+    // 用于获取_ListNode中__M_data的指针，仅能用于子类。由于__M_data肯定跟在基类成员后面，所以可以采取这种算法。
+    void* _M_get_data() { return static_cast<void*>(this + 1); }
+    const void* _M_get_data() const { return static_cast<const void*>(this + 1); }
+};
+
+template <typename _Tp>
+class _ListNode : public _ListNodeBase 
+{
+public:
+    _Tp __M_data;
+};
+
+struct _ListIteratorBase 
+{
+    typedef size_t                     size_type;
+    typedef ptrdiff_t                  difference_type;
+    typedef bidirectional_iterator_tag iterator_category;
+
+    _ListNodeBase* __M_node;
+
+    _ListIteratorBase(_ListNodeBase* __node) : __M_node(__node) {}
+
+    void _M_incr() { __M_node = __M_node->__M_next; }
+    void _M_decr() { __M_node = __M_node->__M_prev; }
+};
+
+template<typename _Tp, typename _Traits>
+struct _ListIterator : public _ListIteratorBase 
+{
+    typedef _Tp value_type;
+    typedef typename _Traits::pointer    pointer;
+    typedef typename _Traits::reference  reference;
+
+    typedef _ListIterator<_Tp, _Traits> _Self;
+    typedef typename _Traits::_NonConst _NonConstTraits;
+    typedef _ListIterator<_Tp, _NonConstTraits> iterator;
+    typedef typename _Traits::_Const _ConstTraits;
+    typedef _ListIterator<_Tp, _ConstTraits> const_iterator;
+
+    typedef bidirectional_iterator_tag iterator_category;
+    typedef _ListNode<_Tp> _Node;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+
+    explicit _ListIterator(_ListNodeBase* __node) : _ListIteratorBase(__node) {}
+    _ListIterator() : _ListIteratorBase(0) {}
+    _ListIterator(const iterator& __it) : _ListIteratorBase(__it.__M_node) {}
+
+    reference operator*() const { return static_cast<_Node*>(__M_node)->__M_data; }
+    pointer operator->() const { return &(operator*()); }
+
+    _Self& operator++() 
+    {
+        _M_incr();
+        return *this;
+    }
+
+    _Self operator++(int) 
+    {
+        _Self __tmp = *this;
+        _M_incr();
+        return __tmp;
+    }
+
+    _Self& operator--() 
+    {
+        _M_decr();
+        return *this;
+    }
+
+    _Self operator--(int) 
+    {
+        _Self __tmp = *this;
+        _M_decr();
+        return __tmp;
+    }
+
+    bool operator==(const_iterator __other) const 
+    {
+        return __M_node == __other.__M_node;
+    }
+
+    bool operator!=(const_iterator __other) const
+    {
+        return !(*this == __other);
+    }
+};
+
+template <typename _Tp, typename _Traits>
+struct type_traits<_ListIterator<_Tp, _Traits> >
+{
+    typedef _FalseType   has_trivial_default_constructor;
+    typedef _TrueType    has_trivial_copy_constructor;
+    typedef _TrueType    has_trivial_assignment_operator;
+    typedef _TrueType    has_trivial_destructor;
+    typedef _FalseType   is_POD_type;
+};
+
+class _ListBase 
+{
+protected:
+    typedef _ListNodeBase _NodeBase;
+    typedef _ListBase _Self;
+
+public:
+    bool empty() const { return __M_node.__M_next == &__M_node; }
+    size_t size() const;
+    void reverse();
+
+protected:
+    _ListBase()
+    { 
+        _M_empty_initialize(); 
+    }
+
+    ~_ListBase() {}
+
+    void _M_empty_initialize() 
+    {
+        __M_node.__M_next = &__M_node;
+        __M_node.__M_prev = __M_node.__M_next;
+    }
+
+    _ListBase& _M_assign(const _ListBase& __other, size_t __node_size, size_t __data_size);
+
+    void _M_swap_to_empty(_ListBase& __other);
+    void _M_swap(_ListBase& __other);
+
+    _NodeBase* _M_create_node(size_t __node_size, const void* __data, size_t __data_size);
+    _NodeBase* _M_insert_node(_NodeBase* __pos, size_t __node_size, const void* __data, size_t __data_size);
+    void _M_insert_nodes(_NodeBase* __pos, const _NodeBase* __first, const _NodeBase* __last, size_t __node_size, size_t __data_size);
+    void _M_fill_insert(_NodeBase* __pos, size_t __count, size_t __node_size, const void* __data, size_t __data_size);
+    _NodeBase* _M_erase(_NodeBase* __pos);
+    _NodeBase* _M_erase(_NodeBase* __first, _NodeBase* __last);
+    void _M_resize(size_t __new_size, size_t __node_size, const void* __fill_data, size_t __data_size);
+    void _M_fill_assign(size_t __count, size_t __node_size, const void* __data, size_t __data_size);
+
+    // 把[__first, __last)这一段链表接到__position之前的位置上。
+    static void _M_transfer(_NodeBase* __position, _NodeBase* __first, _NodeBase* __last);
+
+    void _M_remove(const void* __data, _DataBinaryPredicate __equal_pfn);
+    void _M_remove_if(_DataUnaryPredicate __pred_pfn);
+    void _M_unique(_DataBinaryPredicate __binary_pred_pfn);
+    void _M_merge(_ListBase& __other, _DataBinaryPredicate __less_pfn);
+    void _M_sort(_DataBinaryPredicate __less_pfn);
+
+    bool _M_equal_to(const _ListBase& __other, _DataBinaryPredicate __equal_pfn) const;
+    bool _M_less_than(const _ListBase& __other, _DataBinaryPredicate __less_pfn) const;
+
+    _NodeBase __M_node;
+};
+
+template <typename _Tp>
+class list : public _ListBase
+{
+    typedef _ListBase _Base;
+    typedef list<_Tp> _Self;
+    typedef _ListNode<_Tp> _Node;
+    typedef _ListNodeBase _NodeBase;
+
+public:
+    typedef _Tp value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+    typedef bidirectional_iterator_tag _IteratorCategory;
+
+    typedef _ListIterator<_Tp, _NonConstTraits<_Tp> > iterator;
+    typedef _ListIterator<_Tp, _ConstTraits<_Tp> > const_iterator;
+    typedef podstl::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef podstl::reverse_iterator<iterator> reverse_iterator;
+
+    iterator begin()                      { return iterator(__M_node.__M_next); }
+    const_iterator begin() const          { return const_iterator(__M_node.__M_next); }
+
+    iterator end()                        { return iterator(&__M_node); }
+    const_iterator end() const            { return const_iterator(const_cast<_NodeBase*>(&__M_node)); }
+
+    reverse_iterator rbegin()             { return reverse_iterator(end()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+
+    reverse_iterator rend()               { return reverse_iterator(begin()); }
+    const_reverse_iterator rend() const   { return const_reverse_iterator(begin()); }
+
+    size_type max_size() const { return static_cast<size_type>(-1); }
+
+    reference front()             { return *begin(); }
+    const_reference front() const { return *begin(); }
+    reference back()              { return *(--end()); }
+    const_reference back() const  { return *(--end()); }
+
+    explicit list(size_type __count, const_reference __data = value_type())
+    {
+        insert(begin(), __count, __data);
+    }
+
+    // We don't need any dispatching tricks here, because insert does all of that anyway.
+    template <typename _InputIterator>
+    list(_InputIterator __first, _InputIterator __last)
+    { 
+        _M_insert(begin(), __first, __last); 
+    }
+
+    list() {}
+
+    list(const _Self& __other)
+    { 
+        _M_insert_nodes(__M_node.__M_next, __other.__M_node.__M_next, &(__other.__M_node), sizeof(_Node), sizeof(value_type));
+    }
+
+    ~list() { _M_clear(); }
+
+    _Self& operator = (const _Self& __other)
+    { 
+        return static_cast<_Self&>(_M_assign(__other, sizeof(_Node), sizeof(value_type))); 
+    }
+
+    void clear()
+    {
+        _M_clear();
+        _M_empty_initialize();
+    }
+
+private:
+    void _M_clear()
+    {
+        _ListNodeBase* __cur = __M_node.__M_next;
+        while (__cur != &(__M_node))
+        {
+            _Node* __tmp = static_cast<_Node*>(__cur);
+            __cur = __cur->__M_next;
+            _destroy(&(__tmp->__M_data));
+            STL_Free(__tmp);
+        }
+    }
+
+public:
+    void swap(_Self& __other) { _M_swap(__other); }
+
+    iterator insert(iterator __pos, const_reference __data)
+    {
+        return iterator(_M_insert_node(__pos.__M_node, sizeof(_Node), &__data, sizeof(__data)));
+    }
+
+private:
+    template <typename _InputIterator>
+    void _M_insert(iterator __pos, _InputIterator __first, _InputIterator __last) 
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_insert_dispatch(__pos, __first, __last, _Integral());
+    }
+
+    template<typename _Integer>
+    void _M_insert_dispatch(iterator __pos, _Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */) 
+    {
+        value_type __tmp_data = __data; // 匹配类型
+        _M_fill_insert(__pos, __count, sizeof(_Node), &__tmp_data, sizeof(value_type));
+    }
+
+    template <typename _InputIter>
+    void _M_insert_dispatch(iterator __pos, _InputIter __first, _InputIter __last, const _FalseType& /* _IsIntegral */) 
+    {
+        for ( ; __first != __last; ++__first)
+        {
+            insert(__pos, *__first);
+        }
+    }
+
+public:
+    template <typename _InputIterator>
+    void insert(iterator __pos, _InputIterator __first, _InputIterator __last) 
+    {
+        _M_insert(__pos, __first, __last);
+    }
+
+    void insert(iterator __pos, size_type __count, const_reference __data)
+    { 
+        _M_fill_insert(__pos.__M_node, __count, sizeof(_Node), &__data, sizeof(__data));
+    }
+
+    void push_front(const_reference __data) { insert(begin(), __data); }
+    void push_back(const_reference __data) { insert(end(), __data); }
+
+    iterator erase(iterator __pos)
+    {
+        _destroy(&(*__pos));
+        return iterator(_M_erase(__pos.__M_node));
+    }
+
+    iterator erase(iterator __first, iterator __last) 
+    {
+        _destroy_range(__first, __last);
+        return iterator(_M_erase(__first.__M_node, __last.__M_node));
+    }
+
+    void resize(size_type __new_size, const_reference __fill_data = value_type())
+    {
+        _M_resize(__new_size, sizeof(_Node), &__fill_data, sizeof(__fill_data));
+    }
+
+    void pop_front() { erase(begin()); }
+    void pop_back() { erase(--end()); }
+
+    void assign(size_type __count, const_reference __data) 
+    { 
+        _M_fill_assign(__count, sizeof(_Node), &__data, sizeof(__data)); 
+    }
+
+    template <typename _InputIterator>
+    void assign(_InputIterator __first, _InputIterator __last)
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_assign_dispatch(__first, __last, _Integral());
+    }
+
+private:
+    template <typename _Integer>
+    void _M_assign_dispatch(_Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */)
+    {
+        value_type __tmp_data = __data; // 匹配类型
+        _M_fill_assign(static_cast<size_t>(__count), sizeof(_Node), &__tmp_data, sizeof(__data));
+    }
+
+    template <typename _InputIterator>
+    void _M_assign_dispatch(_InputIterator __first2, _InputIterator __last2, const _FalseType& /* _IsIntegral */)
+    {
+        iterator __first1 = begin();
+        iterator __last1 = end();
+        for (; (__first1 != __last1) && (__first2 != __last2); ++__first1, ++__first2)
+        {
+            *__first1 = *__first2;
+        }
+
+        if (__first1 != __last1)
+        {
+            erase(__first1, __last1);
+        }
+        else if (__first2 != __last2)
+        {
+            insert(__last1, __first2, __last2);
+        }
+    }
+
+public:
+    void splice(iterator __pos, _Self& __other) 
+    {
+        _M_transfer(__pos.__M_node, __other.begin().__M_node, __other.end().__M_node);
+    }
+
+    void splice(iterator __pos, _Self& /* __other */, iterator __other_pos)
+    {
+        _M_transfer(__pos.__M_node, __other_pos.__M_node, __other_pos.__M_node->__M_next);
+    }
+
+    void splice(iterator __pos, _Self& /* __other */, iterator __first, iterator __last)
+    {
+        _M_transfer(__pos.__M_node, __first.__M_node, __last.__M_node);
+    }
+
+    void remove(const_reference __data)
+    {
+        _M_remove(&__data, _data_binary_predicate<value_type, equal_to<value_type> >);
+    }
+
+    template <typename _Predicate>
+    void remove_if(_Predicate)
+    {
+        _M_remove_if(_data_unary_predicate<value_type, _Predicate>);
+    }
+
+    void unique()
+    {
+        _M_unique(_data_binary_predicate<value_type, equal_to<value_type> >);
+    }
+
+    template <typename _BinaryPredicate>
+    void unique(_BinaryPredicate)
+    {
+        _M_unique(_data_binary_predicate<value_type, _BinaryPredicate>);
+    }
+
+    void merge(_Self& __other)
+    {
+        _M_merge(__other, _data_binary_predicate<value_type, less<value_type> >);
+    }
+
+    template <typename _StrictWeakOrdering>
+    void merge(_Self& __other, _StrictWeakOrdering)
+    {
+        _M_merge(__other, _data_binary_predicate<value_type, _StrictWeakOrdering>);
+    }
+
+    void sort()
+    { 
+        _M_sort(_data_binary_predicate<value_type, less<value_type> >);
+    }
+
+    template <typename _StrictWeakOrdering>
+    void sort(_StrictWeakOrdering)
+    {
+        _M_sort(_data_binary_predicate<value_type, _StrictWeakOrdering>);
+    }
+
+    bool operator==(const _Self& __other) const
+    {
+        return _M_equal_to(__other, _data_binary_predicate<value_type, equal_to<value_type> >);
+    }
+
+    bool operator<(const _Self& __other) const
+    {
+        return _M_less_than(__other, _data_binary_predicate<value_type, less<value_type> >);
+    }
+};
+
+template <typename _Tp>
+inline void swap(list<_Tp>& __x, list<_Tp>& __y) 
+{
+    __x.swap(__y);
+}
+
+}
+
+#endif // _PODSTL_LIST_H

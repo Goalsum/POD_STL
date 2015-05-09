@@ -1,0 +1,255 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义有序集合容器。
+
+#ifndef _PODSTL_SET_H
+#define _PODSTL_SET_H
+
+#include "_tree.h"
+
+namespace podstl
+{
+
+template <typename _Key, typename _Compare = less<_Key> >
+class set
+{
+    typedef set<_Key, _Compare> _Self;
+
+public:
+    typedef _Key     key_type;
+    typedef _Key     value_type;
+    typedef _Compare key_compare;
+    typedef _Compare value_compare;
+
+private:
+    typedef _RbTree<key_type, key_compare, value_type, _AlwaysConstTraits<value_type> > _RepType;
+
+public:
+    typedef typename _RepType::pointer pointer;
+    typedef typename _RepType::const_pointer const_pointer;
+    typedef typename _RepType::reference reference;
+    typedef typename _RepType::const_reference const_reference;
+    typedef typename _RepType::iterator iterator;
+    typedef typename _RepType::const_iterator const_iterator;
+    typedef typename _RepType::reverse_iterator reverse_iterator;
+    typedef typename _RepType::const_reverse_iterator const_reverse_iterator;
+    typedef typename _RepType::size_type size_type;
+    typedef typename _RepType::difference_type difference_type;
+
+private:
+    _RepType __M_rb_tree;  // red-black tree representing set
+
+public:
+    set() {}
+
+    template <typename _InputIterator>
+    set(_InputIterator __first, _InputIterator __last)
+    { 
+        __M_rb_tree.insert_unique(__first, __last); 
+    }
+
+    set(const _Self& __other) : __M_rb_tree(__other.__M_rb_tree) {}
+
+    _Self& operator=(const _Self& __other)
+    {
+        __M_rb_tree = __other.__M_rb_tree;
+        return *this;
+    }
+
+    key_compare key_comp() const { return __M_rb_tree.key_comp(); }
+    value_compare value_comp() const { return __M_rb_tree.key_comp(); }
+
+    iterator begin() { return __M_rb_tree.begin(); }
+    iterator end() { return __M_rb_tree.end(); }
+    const_iterator begin() const { return __M_rb_tree.begin(); }
+    const_iterator end() const { return __M_rb_tree.end(); }
+    reverse_iterator rbegin() { return __M_rb_tree.rbegin(); }
+    reverse_iterator rend() { return __M_rb_tree.rend(); }
+    const_reverse_iterator rbegin() const { return __M_rb_tree.rbegin(); }
+    const_reverse_iterator rend() const { return __M_rb_tree.rend(); }
+    bool empty() const { return __M_rb_tree.empty(); }
+    size_type size() const { return __M_rb_tree.size(); }
+    size_type max_size() const { return __M_rb_tree.max_size(); }
+    void swap(_Self& __other) { __M_rb_tree.swap(__other.__M_rb_tree); }
+
+    pair<iterator, bool> insert(const value_type& __data)
+    {
+        return __M_rb_tree.insert_unique(__data);
+    }
+    iterator insert(iterator __pos, const value_type& __data)
+    {
+        return __M_rb_tree.insert_unique(__pos, __data);
+    }
+
+    template <typename _InputIterator>
+    void insert(_InputIterator __first, _InputIterator __last)
+    { 
+        __M_rb_tree.insert_unique(__first, __last);
+    }
+
+    void erase(iterator __pos) { __M_rb_tree.erase(__pos); }
+    size_type erase(const key_type& __data) { return __M_rb_tree.erase_unique(__data); }
+    void erase(iterator __first, iterator __last) { __M_rb_tree.erase(__first, __last); }
+    void clear() { __M_rb_tree.clear(); }
+
+    const_iterator find(const key_type& __data) const { return __M_rb_tree.find(__data); }
+    iterator find(const key_type& __data) { return __M_rb_tree.find(__data); }
+    size_type count(const key_type& __data) const
+    {
+        return (__M_rb_tree.find(__data) == __M_rb_tree.end()) ? 0 : 1;
+    }
+    
+    iterator lower_bound(const key_type& __data) { return __M_rb_tree.lower_bound(__data); }
+    const_iterator lower_bound(const key_type& __data) const { return __M_rb_tree.lower_bound(__data); }
+    iterator upper_bound(const key_type& __data) { return __M_rb_tree.upper_bound(__data); }
+    const_iterator upper_bound(const key_type& __data) const { return __M_rb_tree.upper_bound(__data); }
+    
+    pair<iterator, iterator> equal_range(const key_type& __data)
+    {
+        return __M_rb_tree.equal_range_unique(__data);
+    }
+    
+    pair<const_iterator, const_iterator> equal_range(const key_type& __data) const
+    {
+        return __M_rb_tree.equal_range_unique(__data);
+    }
+
+    bool operator==(const _Self& __other) const
+    {
+        return (__M_rb_tree == __other.__M_rb_tree);
+    }
+
+    bool operator<(const _Self& __other) const
+    {
+        return (__M_rb_tree < __other.__M_rb_tree);
+    }
+
+    void _M_verify() const // 仅用于DEBUG模式下的数据一致性校验
+    {
+        __M_rb_tree._M_verify();
+    }
+};
+
+template <typename _Key, typename _Compare>
+inline void swap(set<_Key, _Compare>& __x, set<_Key, _Compare>& __y)
+{
+    __x.swap(__y);
+}
+
+template <typename _Key, typename _Compare = less<_Key> >
+class multiset
+{
+    typedef multiset<_Key, _Compare> _Self;
+
+public:
+    typedef _Key     key_type;
+    typedef _Key     value_type;
+    typedef _Compare key_compare;
+    typedef _Compare value_compare;
+
+private:
+    typedef  _RbTree<key_type, key_compare, value_type, _AlwaysConstTraits<value_type> > _RepType;
+
+public:
+    typedef typename _RepType::pointer pointer;
+    typedef typename _RepType::const_pointer const_pointer;
+    typedef typename _RepType::reference reference;
+    typedef typename _RepType::const_reference const_reference;
+    typedef typename _RepType::iterator iterator;
+    typedef typename _RepType::const_iterator const_iterator;
+    typedef typename _RepType::reverse_iterator reverse_iterator;
+    typedef typename _RepType::const_reverse_iterator const_reverse_iterator;
+    typedef typename _RepType::size_type size_type;
+    typedef typename _RepType::difference_type difference_type;
+
+private:
+    _RepType __M_rb_tree;  // red-black tree representing multiset
+
+public:
+    multiset() {}
+
+    template <typename _InputIterator>
+    multiset(_InputIterator __first, _InputIterator __last)
+    { 
+        __M_rb_tree.insert_equal(__first, __last); 
+    }
+
+    multiset(const _Self& __other) : __M_rb_tree(__other.__M_rb_tree) {}
+
+    _Self& operator =(const _Self& __other) 
+    {
+        __M_rb_tree = __other.__M_rb_tree;
+        return *this;
+    }
+
+    key_compare key_comp() const { return __M_rb_tree.key_comp(); }
+    value_compare value_comp() const { return __M_rb_tree.key_comp(); }
+
+    iterator begin() { return __M_rb_tree.begin(); }
+    iterator end() { return __M_rb_tree.end(); }
+    const_iterator begin() const { return __M_rb_tree.begin(); }
+    const_iterator end() const { return __M_rb_tree.end(); }
+    reverse_iterator rbegin() { return __M_rb_tree.rbegin(); }
+    reverse_iterator rend() { return __M_rb_tree.rend(); }
+    const_reverse_iterator rbegin() const { return __M_rb_tree.rbegin(); }
+    const_reverse_iterator rend() const { return __M_rb_tree.rend(); }
+    bool empty() const { return __M_rb_tree.empty(); }
+    size_type size() const { return __M_rb_tree.size(); }
+    size_type max_size() const { return __M_rb_tree.max_size(); }
+    void swap(_Self& __other) { __M_rb_tree.swap(__other.__M_rb_tree); }
+
+    iterator insert(const value_type& __data)
+    {
+        return __M_rb_tree.insert_equal(__data);
+    }
+
+    iterator insert(iterator __pos, const value_type& __data)
+    {
+        return __M_rb_tree.insert_equal(__pos, __data);
+    }
+
+    template <typename _InputIterator>
+    void insert(_InputIterator __first, _InputIterator __last)
+    { 
+        __M_rb_tree.insert_equal(__first, __last); 
+    }
+
+    void erase(iterator __pos) { __M_rb_tree.erase(__pos); }
+    size_type erase(const key_type& __data) { return __M_rb_tree.erase(__data); }
+    void erase(iterator __first, iterator __last) { __M_rb_tree.erase(__first, __last); }
+    void clear() { __M_rb_tree.clear(); }
+
+    iterator find(const key_type& __data) { return __M_rb_tree.find(__data); }
+    const_iterator find(const key_type& __data) const { return __M_rb_tree.find(__data); }
+    size_type count(const key_type& __data) const { return __M_rb_tree.count(__data); }
+    iterator lower_bound(const key_type& __data) { return __M_rb_tree.lower_bound(__data); }
+    const_iterator lower_bound(const key_type& __data) const { return __M_rb_tree.lower_bound(__data); }
+    iterator upper_bound(const key_type& __data) { return __M_rb_tree.upper_bound(__data); }
+    const_iterator upper_bound(const key_type& __data) const { return __M_rb_tree.upper_bound(__data); }
+    pair<iterator, iterator> equal_range(const key_type& __data) { return __M_rb_tree.equal_range(__data); }
+    pair<const_iterator, const_iterator> equal_range(const key_type& __data) const { return __M_rb_tree.equal_range(__data); }
+
+    bool operator==(const _Self& __other) const
+    {
+        return (__M_rb_tree == __other.__M_rb_tree);
+    }
+
+    bool operator<(const _Self& __other) const
+    {
+        return (__M_rb_tree < __other.__M_rb_tree);
+    }
+
+    void _M_verify() const // 仅用于DEBUG模式下的数据一致性校验
+    {
+        __M_rb_tree._M_verify();
+    }
+};
+
+template <typename _Key, typename _Compare>
+inline void swap(multiset<_Key, _Compare>& __x, multiset<_Key, _Compare>& __y)
+{
+    __x.swap(__y);
+}
+
+}
+
+#endif // _PODSTL_SET_H

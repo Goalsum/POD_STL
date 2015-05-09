@@ -1,0 +1,100 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义ios类型。
+
+#ifndef _PODSTL_IOS_H
+#define _PODSTL_IOS_H
+
+#include "_base_depends.h"
+#include "_ios_base.h"
+#include "streambuf"
+
+namespace podstl
+{
+
+class ostream;
+
+class ios : public ios_base
+{
+public:                         // Synonyms for types.
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+
+    // Constructor, destructor.
+    explicit ios(streambuf* __streambuf);
+    virtual ~ios() {}
+
+    // Members from clause 27.4.4.2
+    ostream* tie() const
+    {
+        return __M_tied_ostream;
+    }
+
+    ostream* tie(ostream* __new_tied_ostream)
+    {
+        ostream* __tmp = __M_tied_ostream;
+        __M_tied_ostream = __new_tied_ostream;
+        return __tmp;
+    }
+
+    streambuf* rdbuf() const
+    {
+        return __M_streambuf;
+    }
+
+    streambuf* rdbuf(streambuf* __buf);
+
+    // Copies __other's state to *this.
+    ios& copyfmt(const ios& __other);
+
+    char_type fill() const { return __M_fill; }
+    char_type fill(char_type __fill)
+    {
+        char_type __tmp(__M_fill);
+        __M_fill = __fill;
+        return __tmp;
+    }
+
+    // Members from 27.4.4.3.  These four functions can almost be defined in ios_base.
+    void clear(iostate __state = goodbit)
+    {
+        _M_clear_nothrow(rdbuf() ? __state : iostate(__state | ios_base::badbit));
+    }
+
+    void setstate(iostate __state) { clear(rdstate() | __state); }
+
+    iostate exceptions() const { return _M_get_exception_mask(); }
+    void exceptions(iostate __mask)
+    {
+        _M_set_exception_mask(__mask);
+        clear(rdstate());
+    }
+
+    // Locale-related member functions.
+    char narrow(char_type __char, char) const { return __char; }
+    char_type widen(char __char) const { return __char; }
+
+    // Helper function that makes testing for EOF more convenient.
+    static bool _S_eof(int_type __c)
+    {
+        return __c == EOF;
+    }
+
+protected:
+    ios();
+    void init(streambuf* __streambuf);
+
+private:                        // Data members
+    char_type __M_fill;            // The fill character, used for padding.
+
+    streambuf* __M_streambuf;
+    ostream* __M_tied_ostream;
+};
+
+}
+
+//#include "ostream"   // 因为使用了ostream的前向声明，必须要包含ostream的完整定义。
+
+#endif // _PODSTL_IOS_H
+

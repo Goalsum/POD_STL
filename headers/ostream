@@ -1,0 +1,186 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义ostream类型。
+
+#ifndef _PODSTL_OSTREAM_H
+#define _PODSTL_OSTREAM_H
+
+#include "ios"
+#include "_num_put.h"
+
+namespace podstl
+{
+
+class ostream : virtual public ios 
+{
+    typedef ostream _Self;
+
+public:
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+
+    explicit ostream(streambuf* __buf);
+    ~ostream() {}
+
+    // Helper functions for istream<>::sentry constructor.
+    bool _M_init_bostr()
+    {
+        if (!good()) return false;
+        if (!rdbuf()) setstate(ios_base::badbit);
+        if (tie()) tie()->flush();
+        return good();
+    }
+
+    // Hooks for manipulators.
+    typedef ios& (*_IosFn)(ios&);
+    typedef ios_base& (*_IosBaseFn)(ios_base&);
+    typedef _Self& (*_OstreamFn)(_Self&);
+    _Self& operator<<(_OstreamFn __f) { return __f(*this); }
+    _Self& operator<<(_IosBaseFn __f) { __f(*this); return *this; }
+    _Self& operator<<(_IosFn __ff) { __ff(*this); return *this; }
+
+private:
+    bool _M_copy_buffered(streambuf* __from, streambuf* __to);
+    bool _M_copy_unbuffered(streambuf* __from, streambuf* __to);
+
+    // Helper function for numeric output.
+    template <typename _Number>
+    ostream& _M_put_num(_Number __x)
+    {
+        typedef typename ostream::sentry _Sentry;
+        _Sentry __sentry(*this);
+        bool __failed = true;
+
+        if (__sentry) 
+        {
+            __failed = (use_facet<num_put>(getloc())).put(ostreambuf_iterator(rdbuf()), *this, fill(), __x).failed();
+        }
+
+        if (__failed) setstate(ios_base::badbit);
+            
+        return *this;
+    }
+
+private:
+    void _M_put_char(char_type __char);
+    void _M_put_string(const char_type* __string);
+
+public:                         // Unformatted output.
+    _Self& put(char_type __char);
+    _Self& write(const char_type* __string, streamsize __length);
+
+    // Formatted output.
+    // Formatted output from a streambuf.
+    _Self& operator<<(streambuf* __buf);
+
+    _Self& operator<<(char_type __char) { _M_put_char(__char); return *this; }
+    _Self& operator<<(unsigned char __char) { _M_put_char(__char); return *this; }
+    _Self& operator<<(signed char __char) { _M_put_char(__char); return *this; }
+    _Self& operator<<(const char_type* __string) { _M_put_string(__string); return *this; }
+    _Self& operator<<(const signed char* __string) { _M_put_string(reinterpret_cast<const char*>(__string)); return *this; }
+    _Self& operator<<(const unsigned char* __string) { _M_put_string(reinterpret_cast<const char*>(__string)); return *this; }
+
+    _Self& operator<<(short __x);
+    _Self& operator<<(unsigned short __x);
+    _Self& operator<<(int __x);
+    _Self& operator<<(unsigned int __x);
+    _Self& operator<<(long __x);
+    _Self& operator<<(unsigned long __x);
+    _Self& operator<<(LONG_LONG __x);
+    _Self& operator<<(ULONG_LONG __x);
+    _Self& operator<<(float __x);
+    _Self& operator<<(double __x);
+    _Self& operator<<(long double __x);
+    _Self& operator<<(const void* __x);
+    _Self& operator<<(bool __x);
+
+public:                         // Buffer positioning and manipulation.
+    _Self& flush() 
+    {
+        if (rdbuf())
+        {
+            if (rdbuf()->pubsync() == -1)
+            {
+                setstate(ios_base::badbit);
+            }
+        }
+        return *this;
+    }
+
+    pos_type tellp() 
+    {
+        return (rdbuf() && !fail()) ? rdbuf()->pubseekoff(0, ios_base::cur, ios_base::out) : pos_type(-1);
+    }
+
+    _Self& seekp(pos_type __pos) 
+    {
+        if (rdbuf() && !fail()) 
+        {
+            if (rdbuf()->pubseekpos(__pos, ios_base::out) == pos_type(-1)) 
+            {
+                setstate(ios_base::failbit);
+            }
+        }
+        return *this;
+    }
+
+    _Self& seekp(off_type __off, ios_base::seekdir __dir) 
+    {
+        if (rdbuf() && !fail())
+        {
+            rdbuf()->pubseekoff(__off, __dir, ios_base::out);
+        }
+        return *this;
+    }
+
+    class sentry 
+    {
+        typedef sentry _Self;
+
+    private:
+        ostream& __M_stream;
+        bool __M_ok;
+
+    public:
+        explicit sentry(ostream& __stream) : __M_stream(__stream), __M_ok(__stream._M_init_bostr()) {}
+
+        ~sentry() 
+        {
+            if (__M_stream.flags() & ios_base::unitbuf) __M_stream.flush();
+        }
+
+        operator bool() const { return __M_ok; }
+
+    private:     // Disable assignment and copy constructor.
+        sentry(const _Self& __other) : __M_stream(__other.__M_stream) {}
+        _Self& operator=(const _Self&) { return *this; }
+    };
+
+private:
+    num_put __M_num_put;
+};
+
+// ostream manipulators.
+inline ostream& endl(ostream& __os) 
+{
+    __os.put('\n');
+    __os.flush();
+    return __os;
+}
+
+inline ostream& ends(ostream& __os) 
+{
+    __os.put('\0');
+    return __os;
+}
+
+inline ostream& flush(ostream& __os) 
+{
+    __os.flush();
+    return __os;
+}
+
+}
+
+#endif // _PODSTL_OSTREAM_H

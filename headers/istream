@@ -1,0 +1,270 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义istream类型。
+
+#ifndef _PODSTL_ISTREAM_H
+#define _PODSTL_ISTREAM_H
+
+#include "ios"
+#include "ostream"
+#include "_delimiter.h"
+#include "_num_get.h"
+
+namespace podstl
+{
+
+struct _NoSkipWS {};        // Dummy class used by sentry.
+
+// Class istream, a class that performs formatted input through
+// a stream buffer.
+class istream : virtual public ios 
+{
+    typedef istream _Self;
+
+public:     // Types
+    typedef ios& (*_IosFn)(ios&);
+    typedef ios_base& (*_IosBaseFn)(ios_base&);
+    typedef _Self& (*_IstreamFn)(_Self&);
+
+    // Constructor and destructor.
+    explicit istream(streambuf* __buf) : __M_gcount(0)
+    {
+        init(__buf);
+        __M_locale._M_insert(&__M_delim, _Delimiter::id);
+        __M_locale._M_insert(&__M_num_get, num_get::id);
+    }
+    ~istream() {};
+
+    // Hooks for manipulators.  The arguments are function pointers.
+    _Self& operator>> (_IstreamFn __f) { return __f(*this); }
+    _Self& operator>> (_IosFn __f) { __f(*this); return *this; }
+    _Self& operator>> (_IosBaseFn __f) { __f(*this); return *this; }
+
+    // Formatted input of numbers.
+    _Self& operator>> (short& __val);
+    _Self& operator>> (int& __val);
+    _Self& operator>> (unsigned short& __val);
+    _Self& operator>> (unsigned int& __val);
+    _Self& operator>> (long& __val);
+    _Self& operator>> (unsigned long& __val);
+
+    _Self& operator>> (LONG_LONG& __val);
+    _Self& operator>> (ULONG_LONG& __val);
+
+    _Self& operator>> (float& __val);
+    _Self& operator>> (double& __val);
+    _Self& operator>> (long double& __val);
+
+    _Self& operator>> (bool& __val);
+    _Self& operator>> (void*& __val);
+
+    // Copying characters into a streambuf.
+    _Self& operator>>(streambuf*);
+
+    istream& operator>>(char& __char)
+    {
+        _M_formatted_get(__char);
+        return *this;
+    }
+
+    istream& operator>>(unsigned char& __char)
+    {
+        _M_formatted_get(reinterpret_cast<char&>(__char));
+        return *this;
+    }
+
+    istream& operator>>(signed char& __char)
+    {
+        _M_formatted_get(reinterpret_cast<char&>(__char));
+        return *this;
+    }
+
+    istream& operator>>(char* __output_buf)
+    {
+        _M_formatted_get(__output_buf);
+        return *this;
+    }
+
+    istream& operator>>(unsigned char* __output_buf)
+    {
+        _M_formatted_get(reinterpret_cast<char*>(__output_buf));
+        return *this;
+    }
+
+    istream& operator>>(signed char* __output_buf)
+    {
+        _M_formatted_get(reinterpret_cast<char*>(__output_buf));
+        return *this;
+    }
+
+    // Unformatted input.
+    streamsize gcount() const { return __M_gcount; }
+    int_type peek();
+
+    // get() for single characters
+    int_type get();
+    _Self& get(char_type& __char);
+
+    // get() for character arrays.
+    _Self& get(char_type* __output_buf, streamsize __n, char_type __delim);
+    _Self& get(char_type* __output_buf, streamsize __n)
+    {
+        return get(__output_buf, __n, widen('\n'));
+    }
+
+    // get() for streambufs
+    _Self& get(streambuf& __buf, char_type __delim);
+    _Self& get(streambuf& __buf)
+    {
+        return get(__buf, this->widen('\n'));
+    }
+
+    // getline()
+    _Self& getline(char_type* __output_buf, streamsize __n, char_type delim);
+    _Self& getline(char_type* __output_buf, streamsize __n)
+    {
+        return getline(__output_buf, __n, widen('\n'));
+    }
+
+    // read(), readsome(), ignore()
+    _Self& ignore();
+    _Self& ignore(streamsize __n);
+    _Self& ignore(streamsize __n, int_type __delim);
+
+    _Self& read(char_type* __output_buf, streamsize __n);
+    streamsize readsome(char_type* __output_buf, streamsize __n);
+
+    // putback
+    _Self& putback(char_type __char);
+    _Self& unget();
+
+    // Positioning and buffer control.
+    int sync();
+
+    pos_type tellg();
+    _Self& seekg(pos_type __pos);
+    _Self& seekg(off_type, ios_base::seekdir);
+
+    // Helper functions for non-member extractors.
+    void _M_formatted_get(char& __char);
+    void _M_formatted_get(char* __output_buf);
+    void _M_skip_whitespace(bool __set_failbit);
+
+    // Helper functions for istream<>::sentry constructor.
+    bool _M_init_skip()
+    {
+        if (good())
+        {
+            if (tie())
+            {
+                tie()->flush();
+            }
+            _M_skip_whitespace(true);
+        }
+
+        if (!good())
+        {
+            setstate(ios_base::failbit);
+            return false;
+        }
+
+        return true;
+    }
+
+    bool _M_init_noskip()
+    {
+        if (good())
+        {
+            if (tie())
+            {
+                tie()->flush();
+            }
+
+            if (!rdbuf())
+            {
+                setstate(ios_base::badbit);
+            }
+        }
+        else
+        {
+            setstate(ios_base::failbit);
+        }
+        return good();
+    }
+
+    // 扩展功能，非STL标准。添加一个用户自定义的分隔字符。
+    void add_delimeter(char __delim) { __M_delim._M_add_delim(__delim); }
+
+private:
+    streamsize _M_read_unbuffered(streamsize& __output_count, char_type* __output_buf, const _Delimiter& __delim, bool __extract_delim);
+    streamsize _M_read_buffered(streamsize& __output_count, char_type* __output_buf, const _Delimiter& __delim, bool __extract_delim);
+    streamsize _M_ignore_unbuffered(streamsize __max_count, const _Delimiter& __delim, bool __extract_delim);
+    streamsize _M_ignore_buffered(streamsize __max_count, const _Delimiter& __delim, bool __extract_delim);
+    streamsize _M_copy_unbuffered(streambuf* __dest, const _Delimiter& __delim, bool __extract_delim);
+    streamsize _M_copy_buffered(streambuf* __dest, const _Delimiter& __delim, bool __extract_delim);
+
+    // Helper function for formatted input of numbers.
+    template <typename _Number>
+    ios_base::iostate _M_get_num(_Number& __val)
+    {
+        ios_base::iostate __err = 0;
+        sentry __sentry(*this);     // Skip whitespace.
+        if (__sentry)
+        {
+            (use_facet<num_get>(getloc())).get(istreambuf_iterator(rdbuf()), 0, *this, __err, __val);
+            if (__err) setstate(__err);
+        }
+        return __err;
+    }
+
+    // Number of characters extracted by the most recent unformatted input function.
+    streamsize __M_gcount;
+    num_get __M_num_get;
+
+protected:
+    _Delimiter __M_delim;
+
+public:
+    class sentry 
+    {
+        typedef sentry _Self;
+
+    private:
+        const bool __M_ok;
+
+    public:
+        explicit sentry(istream& __istr, bool __noskipws = false) :
+            __M_ok((__noskipws || !(__istr.flags() & ios_base::skipws)) ? __istr._M_init_noskip() : __istr._M_init_skip())
+        {}
+
+        // Calling this constructor is the same as calling the previous one with
+        // __noskipws = true, except that it doesn't require a runtime test.
+        sentry(istream& __istr, _NoSkipWS) : __M_ok(__istr._M_init_noskip()) {}
+
+        ~sentry() {}
+        operator bool() const { return __M_ok; }
+
+    private:                        
+        // Disable assignment and copy constructor. Implementation is here only to avoid warning with some compilers.
+        sentry(const _Self&) : __M_ok(false) {}
+        _Self& operator=(const _Self&) { return *this; }
+    };
+};
+
+// istream manipulator.
+inline istream& ws(istream& __istr) 
+{
+    if (!__istr.eof()) 
+    {
+        typedef istream::sentry _Sentry;
+        _Sentry __sentry(__istr, _NoSkipWS()); // Don't skip whitespace.
+        if (__sentry)
+        {
+            __istr._M_skip_whitespace(false);
+        }
+    }
+    return __istr;
+}
+
+}
+
+#endif // _PODSTL_ISTREAM_H

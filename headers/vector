@@ -1,0 +1,450 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义vector容器。
+
+#ifndef _PODSTL_VECTOR_H
+#define _PODSTL_VECTOR_H
+
+#include "_base_depends.h"
+#include "type_traits.h"
+#include "_iterator.h"
+#include "_algobase.h"
+#include "_construct.h"
+#include "_uninitialized.h"
+
+namespace podstl
+{
+
+class _VectorBase
+{
+public:
+    _VectorBase() : __M_start(0), __M_finish(0), __M_end_of_storage(0) {}
+
+    _VectorBase(size_t __count, size_t __unit_size);
+
+    ~_VectorBase()
+    {
+        _M_clear();
+    }
+
+    bool operator==(const _VectorBase& __other_vector) const;
+    bool operator<(const _VectorBase& __other_vector) const;
+
+protected:
+    void _M_clear()
+    {
+        if (__M_start != NULL)
+        {
+            STL_Free(__M_start);
+        }
+    }
+
+    void _M_set(void* __start, void* __finish, void* __end_of_storage)
+    {
+        __M_start = __start;
+        __M_finish = __finish;
+        __M_end_of_storage = __end_of_storage;
+        STL_ASSERT((_M_get_finish() >= _M_get_start()) && (_M_get_end_of_storage() >= _M_get_finish()));
+    }
+
+    size_t _M_max_size(size_t __unit_size) const
+    {
+        return static_cast<size_t>(-1) / __unit_size;
+    }
+
+    size_t _M_compute_next_size(size_t __count, size_t __unit_size) const;
+    void _M_insert_overflow(void* __pos, size_t __count, const void* __data, size_t __unit_size);
+    void _M_fill_insert_aux(void* __pos, size_t __count, const void* __data, size_t __unit_size);
+    void _M_fill_insert(void* __pos, size_t __count, const void* __data, size_t __unit_size);
+
+    void _M_reserve(size_t __count);
+    void _M_reserve_and_clear(size_t __count);
+    void _M_fill_assign(size_t __count, const void* __data, size_t __unit_size);
+    void _M_assgin(const void* __start, const void* __finish);
+    void _M_push_back(const void* __data, size_t __unit_size);
+
+    char* _M_get_start() const {return static_cast<char*>(__M_start);}
+    char* _M_get_finish() const {return static_cast<char*>(__M_finish);}
+    char* _M_get_end_of_storage() const {return static_cast<char*>(__M_end_of_storage);}
+
+    void* __M_start;
+    void* __M_finish;
+    void* __M_end_of_storage;
+};
+
+template <class _Tp>
+class vector : public _VectorBase
+{
+private:
+    typedef vector<_Tp> _Self;
+
+public:
+    typedef _Tp value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type* iterator;
+    typedef const value_type* const_iterator;
+
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+    typedef random_access_iterator_tag _IteratorCategory;
+    typedef podstl::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef podstl::reverse_iterator<iterator> reverse_iterator;
+
+private:
+    iterator _M_end_of_storage() const { return static_cast<iterator>(__M_end_of_storage); }
+
+public:
+    iterator begin()             { return static_cast<iterator>(__M_start); }
+    const_iterator begin() const { return static_cast<const_iterator>(__M_start); }
+    iterator end()               { return static_cast<iterator>(__M_finish); }
+    const_iterator end() const   { return static_cast<const_iterator>(__M_finish); }
+
+    reverse_iterator rbegin()              { return reverse_iterator(end()); }
+    const_reverse_iterator rbegin() const  { return const_reverse_iterator(end()); }
+    reverse_iterator rend()                { return reverse_iterator(begin()); }
+    const_reverse_iterator rend() const    { return const_reverse_iterator(begin()); }
+
+    size_type size() const 
+    {
+        STL_ASSERT(end() >= begin());
+        return static_cast<size_type>(end() - begin()); 
+    }
+
+    size_type max_size() const { return static_cast<size_type>(-1) / sizeof(value_type); }
+
+    size_type capacity() const    
+    {
+        STL_ASSERT(_M_end_of_storage() >= begin());
+        return static_cast<size_type>(_M_end_of_storage() - begin()); 
+    }
+
+    bool empty() const            { return begin() == end(); }
+
+    reference operator[](size_type __offset) 
+    { 
+        STL_ASSERT((begin() + __offset) < end());
+        return *(begin() + __offset); 
+    }
+
+    const_reference operator[](size_type __offset) const 
+    { 
+        STL_ASSERT((begin() + __offset) < end());
+        return *(begin() + __offset); 
+    }
+
+    reference front()             
+    {
+        STL_ASSERT(!empty() && (begin() != NULL));
+        return *begin(); 
+    }
+
+    const_reference front() const 
+    { 
+        STL_ASSERT(!empty() && (begin() != NULL));
+        return *begin(); 
+    }
+
+    reference back()              
+    { 
+        STL_ASSERT(!empty() && (end() != NULL));
+        return *(end() - 1); 
+    }
+
+    const_reference back() const  
+    { 
+        STL_ASSERT(!empty() && (end() != NULL));
+        return *(end() - 1); 
+    }
+
+    reference at(size_type __offset) 
+    { 
+        return (*this)[__offset]; 
+    }
+
+    const_reference at(size_type __offset) const 
+    { 
+        return (*this)[__offset]; 
+    }
+
+    vector(){}
+
+    explicit vector(size_type __count) : _VectorBase(__count, sizeof(value_type))
+    {
+        __M_finish = _uninitialized_init(begin(), __count, value_type());
+    }
+
+    vector(size_type __count, const _Tp& __element) : _VectorBase(__count, sizeof(value_type))
+    {
+        __M_finish = _fill_n_trivial(begin(), __count, &__element, sizeof(value_type));
+    }
+
+    vector(const _Self& __other_vector) : _VectorBase(__other_vector.size(), sizeof(value_type))
+    {
+        __M_finish = _copy_trivial(__other_vector.begin(), __other_vector.end(), begin());
+    }
+
+private:
+    template <class _InputIterator>
+    void _M_range_initialize(_InputIterator __first, _InputIterator __last, const input_iterator_tag&)
+    {
+        for ( ; __first != __last; ++__first)
+        {
+            push_back(*__first);
+        }
+    }
+
+    template <class _ForwardIterator>
+    void _M_range_initialize(_ForwardIterator __first, _ForwardIterator __last, const forward_iterator_tag&)
+    {
+        size_type __count = distance(__first, __last);
+        if (__count == 0) return;
+        STL_ASSERT(__count <= max_size());
+        __M_start = STL_Malloc(__count * sizeof(value_type));
+        __M_end_of_storage = __M_finish = copy(__first, __last, begin());
+    }
+
+    template <class _Integer>
+    void _M_initialize_aux(_Integer __count, _Integer __element, const _TrueType& /* IsIntegral */)
+    {
+        if (__count == 0) return;
+        __M_start = STL_Malloc(__count * sizeof(value_type));
+        __M_finish = _fill_n_trivial(begin(), __count, &__element, sizeof(value_type));
+        __M_end_of_storage = __M_finish;
+    }
+
+    template <class _InputIterator>
+    void _M_initialize_aux(_InputIterator __first, _InputIterator __last, const _FalseType& /* IsIntegral */)
+    {
+        _M_range_initialize(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIterator));
+    }
+
+public:
+
+    // Check whether it's an integral type.  If so, it's not an iterator.
+    template <class _InputIterator>
+    vector(_InputIterator __first, _InputIterator __last)
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_initialize_aux(__first, __last, _Integral());
+    }
+
+    // As the vector container is a back insert oriented container it
+    // seems rather logical to destroy elements in reverse order.
+    ~vector() { _destroy_range(rbegin(), rend()); }
+
+    _Self& operator=(const _Self& __other_vector)
+    {
+        if (&__other_vector != this)
+        {
+            _M_assgin(__other_vector.begin(), __other_vector.end());
+        }
+        return *this;
+    }
+
+    void reserve(size_type __count)
+    {
+        STL_ASSERT(__count <= max_size());
+        _M_reserve(__count * sizeof(value_type));
+    }
+
+private:
+    template <class _ForwardIter>
+    void _M_assign_aux(_ForwardIter __first, _ForwardIter __last, const forward_iterator_tag&)
+    {
+        const size_type __count = distance(__first, __last);
+        _M_reserve_and_clear(sizeof(value_type) * __count);
+        __M_finish = copy(__first, __last, begin());
+    }
+
+    template <class _InputIter>
+    void _M_assign_aux(_InputIter __first, _InputIter __last, const input_iterator_tag&)
+    {
+        iterator __cur = begin();
+        for ( ; (__first != __last) && (__cur != _M_get_end_of_storage()); ++__cur, ++__first)
+        {
+            *__cur = *__first;
+        }
+        __M_finish = __cur;
+        if (__first != __last)
+        {
+            insert(end(), __first, __last);
+        }
+    }
+
+    template <class _Integer>
+    void _M_assign_dispatch(_Integer __count, _Integer __element, const _TrueType& /* IsIntegral */)
+    {
+        _M_fill_assign(__count, &__element, sizeof(__element));
+    }
+
+    template <class _InputIter>
+    void _M_assign_dispatch(_InputIter __first, _InputIter __last, const _FalseType& /* IsIntegral */)
+    {
+        _M_assign_aux(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIter));
+    }
+
+public:
+    void assign(size_type __count, const _Tp& __element) { _M_fill_assign(__count, &__element, sizeof(__element)); }
+
+    template <class _InputIterator>
+    void assign(_InputIterator __first, _InputIterator __last)
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_assign_dispatch(__first, __last, _Integral());
+    }
+
+    void push_back(const _Tp& __element = _Tp())
+    {
+        _M_push_back(&__element, sizeof(__element));
+    }
+
+    iterator insert(iterator __pos, const _Tp& __element = _Tp())
+    {
+        size_type __offset = __pos - begin();
+        _M_fill_insert(__pos, 1, &__element, sizeof(__element));
+        return begin() + __offset;
+    }
+
+    void swap(_Self& __other_vector)
+    {
+        podstl::swap(__M_start, __other_vector.__M_start);
+        podstl::swap(__M_finish, __other_vector.__M_finish);
+        podstl::swap(__M_end_of_storage, __other_vector.__M_end_of_storage);
+    }
+
+private:
+    template <class _ForwardIterator>
+    void _M_range_insert_aux(iterator __pos, _ForwardIterator __first, _ForwardIterator __last, size_type __count)
+    {
+        __M_finish = _copy_trivial(__pos, end(), __pos + __count);
+        copy(__first, __last, __pos);
+    }
+
+    template <class _ForwardIterator>
+    void _M_range_insert_realloc(iterator __pos, _ForwardIterator __first, _ForwardIterator __last, size_type __count)
+    {
+        size_type __new_size = size() + __count;
+        iterator __new_start = static_cast<iterator>(STL_Malloc(__new_size * sizeof(value_type)));
+        iterator __new_cur_pos = static_cast<iterator>(_copy_trivial(begin(), __pos, __new_start));
+        __new_cur_pos = copy(__first, __last, __new_cur_pos);
+        __new_cur_pos = static_cast<iterator>(_copy_trivial(__pos, end(), __new_cur_pos));
+        _M_clear();
+        _M_set(__new_start, __new_cur_pos, __new_start + __new_size);
+    }
+
+    template <class _InputIterator>
+    void _M_range_insert(iterator __pos, _InputIterator __first, _InputIterator __last, const input_iterator_tag&)
+    {
+        for ( ; __first != __last; ++__first, ++__pos)
+        {
+            __pos = insert(__pos, *__first);
+        }
+    }
+
+    template <class _ForwardIterator>
+    void _M_range_insert(iterator __pos, _ForwardIterator __first, _ForwardIterator __last, const forward_iterator_tag&)
+    {
+        // This method do not check self referencing. Standard forbids it.
+        if (__first != __last)
+        {
+            size_type __count = distance(__first, __last);
+
+            if (static_cast<size_type>(_M_end_of_storage() - end()) >= __count)
+            {
+                _M_range_insert_aux(__pos, __first, __last, __count);
+            }
+            else
+            {
+                _M_range_insert_realloc(__pos, __first, __last, __count);
+            }
+        }
+    }
+
+    template <class _Integer>
+    void _M_insert_dispatch(iterator __pos, _Integer __count, _Integer __element, const _TrueType& /* IsIntegral */)
+    {
+        _M_fill_insert(__pos, static_cast<size_type>(__count), &__element, sizeof(__element));
+    }
+
+    template <class _InputIterator>
+    void _M_insert_dispatch(iterator __pos, _InputIterator __first, _InputIterator __last, const _FalseType& /* IsIntegral */)
+    {
+        _M_range_insert(__pos, __first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIterator));
+    }
+
+public:
+
+    // Check whether it's an integral type.  If so, it's not an iterator.
+    template <class _InputIterator>
+    void insert(iterator __pos, _InputIterator __first, _InputIterator __last)
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_insert_dispatch(__pos, __first, __last, _Integral());
+    }
+
+    void insert(iterator __pos, size_type __count, const _Tp& __element)
+    {
+        _M_fill_insert(__pos, __count, &__element, sizeof(__element));
+    }
+
+    void pop_back()
+    {
+        STL_ASSERT(!empty() && (end() != NULL));
+        __M_finish = end() - 1;
+        _destroy(end());
+    }
+
+    iterator erase(iterator __pos)
+    {
+        STL_ASSERT((__pos >= begin()) && (__pos < end()));
+        _destroy(__pos);
+        _copy_trivial(__pos + 1, end(), __pos);
+        __M_finish = end() - 1;
+        return __pos;
+    }
+
+    iterator erase(iterator __first, iterator __last)
+    {
+        STL_ASSERT((__first >= begin()) && (__first <= end()) && (__last >= begin()) && (__last <= end()) && (__last >= __first));
+        if (__first == __last)
+        {
+            return __first;
+        }
+        _destroy_range(__first, __last);
+        __M_finish = _copy_trivial(__last, end(), __first);
+        return __first;
+    }
+
+    void resize(size_type __new_size, const _Tp& __fill_value = _Tp())
+    {
+        STL_ASSERT(end() >= begin());
+        if (__new_size < size())
+        {
+            erase(begin() + __new_size, end());
+        }
+        else
+        {
+            insert(end(), __new_size - size(), __fill_value);
+        }
+    }
+
+    void clear()
+    {
+        STL_ASSERT(end() >= begin());
+        _destroy_range(begin(), end());
+        __M_finish = __M_start;
+    }
+};
+
+template <typename _Tp>
+inline void swap(vector<_Tp>& __x, vector<_Tp>& __y)
+{
+    __x.swap(__y);
+}
+
+}
+
+#endif // _PODSTL_VECTOR_H
+

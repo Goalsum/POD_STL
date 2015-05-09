@@ -1,0 +1,108 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义locale类型。
+
+#ifndef _PODSTL_LOCALE_H
+#define _PODSTL_LOCALE_H
+
+namespace podstl
+{
+
+class locale 
+{
+public:
+    class facet
+    {
+    protected:
+        explicit facet() {}
+        virtual ~facet();
+        friend class locale;
+
+    private:                        // Invalidate assignment and copying.
+        facet(const facet&);
+        void operator=(const facet&);
+    };
+
+    typedef size_t id;
+
+    enum
+    {
+        NUM_GET_ID = 1,
+        NUM_PUT_ID,
+        DELIMITER_ID,
+        FACET_COUNT
+    };
+
+    typedef int category;
+    static const category none = 0x000;
+    static const category collate = 0x010;
+    static const category ctype = 0x020;
+    static const category monetary = 0x040;
+    static const category numeric = 0x100;
+    static const category time = 0x200;
+    static const category messages = 0x400;
+    static const category all = collate | ctype | monetary | numeric | time | messages;
+
+    locale();
+    locale(const locale& __other);
+
+    template <typename _Facet>
+    locale(const locale& __other, _Facet* __substitute)
+    {
+        if (__facet != 0)
+        {
+            __M_impl = _get_Locale_impl(_copy_Nameless_Locale_impl(__loc.__M_impl));
+            _InsertFacet(*this, __substitute);
+        } 
+        else 
+        {
+            __M_impl = _get_Locale_impl(__loc.__M_impl);
+        }
+    }
+
+    locale(const locale& __other, const locale& __substitute, category __exclusions);
+    const locale& operator=(const locale& __other);
+
+    ~locale() {}
+
+    size_t size() const { return FACET_COUNT; }
+
+    template <typename _Facet>
+    locale combine(const locale& __other) const
+    {
+        _Facet *__facet = 0;
+        if (!_HasFacet(__other, __facet)) return *this;
+        return locale(*this, _UseFacet(__other, __facet));
+    }
+
+    bool operator==(const locale& __other) const;
+    bool operator!=(const locale& __other) const;
+
+    // Helper functions for locale globals.
+    facet* _M_get_facet(id __id) const
+    {
+        return (__id < size()) ? __M_facets[__id] : 0;
+    }
+
+    // More helper functions.
+    void _M_insert(facet* __facet, id __id);
+
+protected:
+    facet* __M_facets[FACET_COUNT];
+};
+
+// locale globals
+template <typename _Facet>
+inline const _Facet& use_facet(const locale& __loc)
+{
+    return *(static_cast<_Facet*>(__loc._M_get_facet(_Facet::id)));
+}
+
+template <typename _Facet>
+inline bool has_facet(const locale& __loc)
+{
+    return __loc._M_get_facet(_Facet::id) != 0;
+}
+
+}
+
+#endif // _PODSTL_LOCALE_H

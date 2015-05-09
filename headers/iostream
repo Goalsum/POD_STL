@@ -1,0 +1,22 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义iostream类型。
+
+#ifndef _PODSTL_IOSTREAM_H
+#define _PODSTL_IOSTREAM_H
+
+#include "ostream"
+#include "istream"
+
+namespace podstl
+{
+
+class iostream : public istream, public ostream
+{
+public:
+    explicit iostream(streambuf* __buf);
+    virtual ~iostream();
+};
+
+}
+
+# endif // _PODSTL_IOSTREAM_H

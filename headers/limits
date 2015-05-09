@@ -1,0 +1,215 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义基本数据类型属性。
+
+#ifndef _PODSTL_LIMITS
+#define _PODSTL_LIMITS
+
+#include <limits.h>
+#include <float.h>
+#include "_base_depends.h"
+
+namespace podstl
+{
+
+enum float_round_style 
+{
+    round_indeterminate = -1,
+    round_toward_zero = 0,
+    round_to_nearest = 1,
+    round_toward_infinity = 2,
+    round_toward_neg_infinity = 3
+};
+
+enum float_denorm_style 
+{
+    denorm_indeterminate = -1,
+    denorm_absent = 0,
+    denorm_present = 1
+};
+
+// Base class for all specializations of numeric_limits.
+template <typename _Number>
+class _NumericLimitsBase 
+{
+public:
+    static _Number min() { return _Number(); }
+    static _Number max() { return _Number(); }
+
+    static const int digits = 0;
+    static const int digits10 = 0;
+    static const int radix = 0;
+    static const int min_exponent = 0;
+    static const int min_exponent10 = 0;
+    static const int max_exponent = 0;
+    static const int max_exponent10 = 0;
+
+    static const float_denorm_style has_denorm = denorm_absent;
+    static const float_round_style round_style = round_toward_zero;
+
+    static const bool is_specialized = false;
+    static const bool is_signed = false;
+    static const bool is_integer = false;
+    static const bool is_exact = false;
+    static const bool has_infinity = false;
+    static const bool has_quiet_NaN = false;
+    static const bool has_signaling_NaN = false;
+    static const bool has_denorm_loss = false;
+    static const bool is_iec559 = false;
+    static const bool is_bounded = false;
+    static const bool is_modulo = false;
+    static const bool traps = false;
+    static const bool tinyness_before = false;
+
+    static _Number epsilon() { return _Number(); }
+    static _Number round_error() { return _Number(); }
+
+    static _Number infinity() { return _Number(); }
+    static _Number quiet_NaN() { return _Number(); }
+    static _Number signaling_NaN() { return _Number(); }
+    static _Number denorm_min() { return _Number(); }
+};
+
+// Base class for integers.
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned = _Int>
+class _IntegerLimits : public _NumericLimitsBase<_Int> 
+{
+public:
+    static _Int min() { return IMIN; }
+    static _Int max() { return IMAX; }
+
+    static const int digits = (IDIGITS < 0) ? ((sizeof(_Int) * CHAR_BIT) - ((IMIN == 0) ? 0 : 1)) : IDIGITS;
+    static const int digits10 = (digits * 301UL) / 1000;    // 计算以十进制科学计数法表示，指数是多少
+    static const int radix = 2;
+    static const bool is_specialized = true;
+    static const bool is_signed = (IMIN != 0);
+    static const bool is_integer = true;
+    static const bool is_exact = true;
+    static const bool is_bounded = true;
+    static const bool is_modulo = IS_MOD;
+
+    typedef _Unsigned _UnsignedType;
+};
+
+// Base class for floating-point numbers.
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+class _FloatingLimits : public _NumericLimitsBase<_Number> 
+{
+public:
+    static const int digits = DIGITS;
+    static const int digits10 = DIGITS10;
+    static const int radix = FLT_RADIX;
+    static const int min_exponent = MINEXP;
+    static const int max_exponent = MAXEXP;
+    static const int min_exponent10 = MINEXP10;
+    static const int max_exponent10 = MAXEXP10;
+
+    static const float_denorm_style has_denorm = DENORM_STYLE;
+    static const float_round_style round_style = ROUND_STYLE;
+
+    static const bool is_specialized = true;
+    static const bool is_signed = true;
+
+    static const bool has_infinity = true;
+    static const bool has_quiet_NaN = true;
+    static const bool has_signaling_NaN = true;
+
+    static const bool is_iec559 = ISIEC559 && has_infinity && has_quiet_NaN && has_signaling_NaN && (has_denorm == denorm_present);
+    static const bool has_denorm_loss = false;
+    static const bool is_bounded = true;
+    static const bool traps = true;
+    static const bool tinyness_before = false;
+};
+
+// Class numeric_limits
+
+// The unspecialized class.
+template<typename _Tp>
+class numeric_limits : public _NumericLimitsBase<_Tp> {};
+
+// Specializations for all built-in integral types.
+template<>
+class numeric_limits<bool> : public _IntegerLimits<bool, false, true, 1, false> {};
+
+template<>
+class numeric_limits<char> : public _IntegerLimits<char, CHAR_MIN, CHAR_MAX, -1, true, unsigned char> {};
+
+template<>
+class numeric_limits<signed char> : public _IntegerLimits<signed char, SCHAR_MIN, SCHAR_MAX, -1, true, unsigned char>{};
+
+template<>
+class numeric_limits<unsigned char> : public _IntegerLimits<unsigned char, 0, UCHAR_MAX, -1, true> {};
+
+template<>
+class numeric_limits<short> : public _IntegerLimits<short, SHRT_MIN, SHRT_MAX, -1, true, unsigned short>{};
+
+template<>
+class numeric_limits<unsigned short> : public _IntegerLimits<unsigned short, 0, USHRT_MAX, -1, true> {};
+
+template<>
+class numeric_limits<int> : public _IntegerLimits<int, INT_MIN, INT_MAX, -1, true, unsigned int>{};
+
+template<>
+class numeric_limits<unsigned int> : public _IntegerLimits<unsigned int, 0, UINT_MAX, -1, true> {};
+
+template<>
+class numeric_limits<long> : public _IntegerLimits<long, LONG_MIN, LONG_MAX, -1, true, unsigned long>{};
+
+template<>
+class numeric_limits<unsigned long> : public _IntegerLimits<unsigned long, 0, ULONG_MAX, -1, true> {};
+
+
+#ifndef LONGLONG_MAX
+#define LONGLONG_MAX 0x7fffffffffffffffLL
+#endif
+
+#ifndef LONGLONG_MIN
+#define LONGLONG_MIN (-LONGLONG_MAX - 1LL)
+#endif
+
+#ifndef ULONGLONG_MAX
+#define ULONGLONG_MAX 0xffffffffffffffffULL
+#endif
+
+template<>
+class numeric_limits<LONG_LONG> : public _IntegerLimits<LONG_LONG, LONGLONG_MIN, LONGLONG_MAX, -1, true, ULONG_LONG>{};
+
+template<>
+class numeric_limits<ULONG_LONG> : public _IntegerLimits<ULONG_LONG, 0, ULONGLONG_MAX, -1, true> {};
+
+template<>
+class numeric_limits<float> : public _FloatingLimits<float, FLT_MANT_DIG, FLT_DIG, FLT_MIN_EXP, FLT_MAX_EXP, FLT_MIN_10_EXP, FLT_MAX_10_EXP, true, denorm_present, round_to_nearest>
+{
+public:
+    static float min() { return FLT_MIN; }
+    static float denorm_min() { return FLT_MIN; }
+    static float max() { return FLT_MAX; }
+    static float epsilon() { return FLT_EPSILON; }
+    static float round_error() { return 0.5f; }
+};
+
+template<>
+class numeric_limits<double> : public _FloatingLimits<double, DBL_MANT_DIG, DBL_DIG, DBL_MIN_EXP, DBL_MAX_EXP, DBL_MIN_10_EXP, DBL_MAX_10_EXP, true, denorm_present, round_to_nearest>
+{
+public:
+    static double min() { return DBL_MIN; }
+    static double denorm_min() { return DBL_MIN; }
+    static double max() { return DBL_MAX; }
+    static double epsilon() { return DBL_EPSILON; }
+    static double round_error() { return 0.5; }
+};
+
+template<>
+class numeric_limits<long double> : public _FloatingLimits<long double, LDBL_MANT_DIG, LDBL_DIG, LDBL_MIN_EXP, LDBL_MAX_EXP, LDBL_MIN_10_EXP, LDBL_MAX_10_EXP, false, denorm_present, round_to_nearest>
+{
+public:
+    static long double min() { return LDBL_MIN; }
+    static long double denorm_min() { return LDBL_MIN; }
+    static const bool is_iec559 = false;
+    static long double max() { return LDBL_MAX; }
+    static long double epsilon() { return LDBL_EPSILON; }
+    static long double round_error() { return 0.5l; }
+};
+
+}
+
+#endif

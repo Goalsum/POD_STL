@@ -1,0 +1,621 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义双端队列容器。
+
+#ifndef _PODSTL_DEQUE_H
+#define _PODSTL_DEQUE_H
+
+#include "_algobase.h"
+#include "_iterator.h"
+#include "_uninitialized.h"
+#include "_operator.h"
+
+// class invariants:
+// for any nonsingular iterator i:
+//    i.node is the address of an element in the map array.  the
+//      contents of i.node is a pointer to the beginning of a node.
+//    i.first == *(i.node)
+//    i.last  == i.first + node_size
+//    i.cur is a pointer in the range [i.first, i.last).  note:
+//      the implication of this is that i.cur is always a dereferenceable
+//      pointer, even if i is a past-the-end iterator.
+// start and finish are always nonsingular iterators.  note: this means
+// that an empty deque must have one node, and that a deque
+// with n elements, where n is the buffer size, must have two nodes.
+// for every node other than start.node and finish.node, every element
+// in the node is an initialized object.  if start.node == finish.node,
+// then [start.cur, finish.cur) are initialized objects, and
+// the elements outside that range are uninitialized storage.  otherwise,
+// [start.cur, start.last) and [finish.first, finish.cur) are initialized
+// objects, and [start.first, start.cur) and [finish.cur, finish.last)
+// are uninitialized storage.
+// [map, map + map_size) is a valid, non-empty range.
+// [start.node, finish.node] is a valid range contained within
+// [map, map + map_size).
+// a pointer in the range [map, map + map_size) points to an allocated node
+// if and only if the pointer is in the range [start.node, finish.node].
+
+namespace podstl
+{
+
+struct _DequeIteratorBase 
+{
+    static size_t _S_buffer_size(size_t __unit_size)
+    {
+        const size_t BLOCK_SIZE = 128;
+        return (__unit_size < BLOCK_SIZE ? (BLOCK_SIZE / __unit_size) : 1);
+    }
+
+    typedef random_access_iterator_tag iterator_category;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+
+    typedef void** _MapPointer;
+    typedef _DequeIteratorBase _Self;
+
+    void* __M_cur;
+    void* __M_first;
+    void* __M_last;
+    _MapPointer __M_node;
+
+    char* _M_get_cur() const { return static_cast<char*>(__M_cur); }
+    char* _M_get_first() const { return static_cast<char*>(__M_first); }
+    char* _M_get_last() const { return static_cast<char*>(__M_last); }
+
+    _DequeIteratorBase(void* __cur, _MapPointer __map_pointer, size_t __unit_size) :
+        __M_cur(__cur), __M_first(*__map_pointer), __M_node(__map_pointer) 
+    {
+        __M_last = _M_get_first() + (_S_buffer_size(__unit_size) * __unit_size);
+    }
+
+    _DequeIteratorBase() : __M_cur(0), __M_first(0), __M_last(0), __M_node(0) {}
+
+    difference_type _M_subtract(const _Self& __other, size_t __unit_size) const;
+    void _M_increment(size_t __unit_size);
+    void _M_decrement(size_t __unit_size);
+    void _M_advance(difference_type __count, size_t __unit_size);
+
+    void _M_set_node(_MapPointer __new_node, size_t __unit_size)
+    {
+        __M_node = __new_node;
+        __M_first = *__M_node;
+        __M_last = _M_get_first() + (_S_buffer_size(__unit_size) * __unit_size);
+    }
+
+    bool operator == (const _DequeIteratorBase& __other) const
+    {
+        return __M_cur == __other.__M_cur;
+    }
+
+    bool operator != (const _DequeIteratorBase& __other) const
+    {
+        return !(*this == __other);
+    }
+
+    bool operator < (const _DequeIteratorBase& __other) const
+    {
+        return (__M_node == __other.__M_node) ? (__M_cur < __other.__M_cur) : (__M_node < __other.__M_node);
+    }
+
+    bool operator > (const _DequeIteratorBase& __other) const
+    {
+        return __other < *this;
+    }
+
+    bool operator <= (const _DequeIteratorBase& __other) const
+    {
+        return !(__other < *this);
+    }
+
+    bool operator >= (const _DequeIteratorBase& __other) const
+    {
+        return !(*this < __other);
+    }
+};
+
+template <typename _Tp, typename _Traits>
+struct _DequeIterator : public _DequeIteratorBase
+{
+    typedef random_access_iterator_tag iterator_category;
+    typedef _Tp value_type;
+    typedef typename _Traits::reference reference;
+    typedef typename _Traits::pointer pointer;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+    typedef value_type** _MapPointer;
+
+    typedef _DequeIteratorBase _Base;
+    typedef _DequeIterator<_Tp, _Traits> _Self;
+    typedef typename _Traits::_NonConst _NonConstTraits;
+    typedef _DequeIterator<_Tp, _NonConstTraits> iterator;
+    typedef typename _Traits::_Const _ConstTraits;
+    typedef _DequeIterator<_Tp, _ConstTraits> const_iterator;
+
+    _DequeIterator(value_type* __cur, _MapPointer __map_pointer) : _DequeIteratorBase(__cur, __map_pointer, sizeof(value_type)) {}
+    _DequeIterator() {}
+    _DequeIterator(const iterator& __other) : _DequeIteratorBase(__other) {}
+
+    reference operator*() const { return *static_cast<pointer>(__M_cur); }
+    pointer operator->() const { return &(operator*()); }
+
+    difference_type operator-(const const_iterator& __other) const { return _M_subtract(__other, sizeof(value_type)); }
+
+    _Self& operator++() 
+    { 
+        _M_increment(sizeof(value_type)); 
+        return *this; 
+    }
+
+    _Self operator++(int)  
+    {
+        _Self __tmp = *this;
+        ++*this;
+        return __tmp;
+    }
+
+    _Self& operator--() 
+    { 
+        _M_decrement(sizeof(value_type));
+        return *this; 
+    }
+
+    _Self operator--(int) 
+    {
+        _Self __tmp = *this;
+        --*this;
+        return __tmp;
+    }
+
+    _Self& operator+=(difference_type __count) 
+    { 
+        _M_advance(__count, sizeof(value_type));
+        return *this; 
+    }
+
+    _Self operator+(difference_type __count) const
+    {
+        _Self __tmp = *this;
+        return __tmp += __count;
+    }
+
+    _Self& operator-=(difference_type __count) { return *this += -__count; }
+    _Self operator-(difference_type __count) const 
+    {
+        _Self __tmp = *this;
+        return __tmp -= __count;
+    }
+
+    reference operator[](difference_type __offset) const { return *(*this + __offset); }
+};
+
+template <typename _Tp, typename _Traits>
+inline _DequeIterator<_Tp, _Traits> operator+(ptrdiff_t __count, const _DequeIterator<_Tp, _Traits>& __it)
+{
+    return __it + __count;
+}
+
+template <typename _Tp, typename _Traits>
+struct type_traits<_DequeIterator<_Tp, _Traits> > 
+{
+    typedef _FalseType has_trivial_default_constructor;
+    typedef _TrueType has_trivial_copy_constructor;
+    typedef _TrueType has_trivial_assignment_operator;
+    typedef _TrueType has_trivial_destructor;
+    typedef _FalseType is_POD_type;
+};
+
+class _DequeBase 
+{
+    typedef _DequeBase _Self;
+
+public:
+    void swap(_Self& __other);
+
+protected:
+    static size_t _S_buffer_size(size_t __unit_size)
+    {
+        return _DequeIteratorBase::_S_buffer_size(__unit_size);
+    }
+
+    _DequeBase(size_t __num_elements, size_t __unit_size) : __M_map(0), __M_map_size(0)
+    { 
+        _M_initialize_map(__num_elements, __unit_size);
+    }
+
+    _DequeBase() : __M_map(0), __M_map_size(0) {}
+
+    ~_DequeBase();
+
+    size_t _M_size(size_t __unit_size) const { return static_cast<size_t>(__M_finish._M_subtract(__M_start, __unit_size)); }
+
+    void _M_initialize_map(size_t __num_elements, size_t __unit_size);
+    void _M_create_nodes(void** __nstart, void** __nfinish, size_t __unit_size);
+    void _M_destroy_nodes(void** __nstart, void** __nfinish);
+
+    void _M_fill_initialize(const void* __data, size_t __unit_size, const _TrueType& /* _TrivialInit */) {}
+    void _M_fill_initialize(const void* __data, size_t __unit_size, const _FalseType& /* _TrivialInit */);
+
+    // Makes sure the __M_map has space for new nodes. Does not actually
+    // add the nodes.  Can invalidate __M_map pointers. (And consequently,
+    // deque iterators.)
+    void _M_reserve_map_at_back(size_t __unit_size, size_t __nodes_to_add = 1);
+    void _M_reserve_map_at_front(size_t __unit_size, size_t __nodes_to_add = 1);
+    void _M_reallocate_map(size_t __nodes_to_add, bool __add_at_front, size_t __unit_size);
+
+    void _M_push_back_node_end(const void* __data, size_t __unit_size);
+    void _M_push_back(const void* __data, size_t __unit_size);
+    void _M_push_front_node_start(const void* __data, size_t __unit_size);
+    void _M_push_front(const void* __data, size_t __unit_size);
+
+    void _M_pop_back(size_t __unit_size);
+    void _M_pop_front(size_t __unit_size);
+
+    void _M_new_elements_at_front(size_t __new_elems, size_t __unit_size);
+    void _M_new_elements_at_back(size_t __new_elems, size_t __unit_size);
+    _DequeIteratorBase _M_reserve_elements_at_front(size_t __count, size_t __unit_size);
+    _DequeIteratorBase _M_reserve_elements_at_back(size_t __count, size_t __unit_size);
+    _DequeIteratorBase _M_fill_insert_aux(_DequeIteratorBase& __pos, size_t __count, const void* __data, size_t __unit_size);
+    _DequeIteratorBase _M_insert_node(_DequeIteratorBase& __pos, const void* __data, size_t __unit_size);
+    void _M_fill_insert(_DequeIteratorBase& __pos, size_t __count, const void* __data, size_t __unit_size);
+
+    _DequeIteratorBase _M_erase(_DequeIteratorBase& __pos, size_t __unit_size);
+    _DequeIteratorBase _M_erase(_DequeIteratorBase& __first, _DequeIteratorBase& __last, size_t __unit_size);
+
+    _DequeBase& _M_assign(const _Self& __other, size_t __unit_size);
+    void _M_fill_assign(size_t __count, const void* __data, size_t __unit_size);
+    void _M_resize(size_t __new_size, const void* __fill_data, size_t __unit_size);
+
+    static const size_t INITIAL_MAP_SIZE = 8;
+    _DequeIteratorBase __M_start;
+    _DequeIteratorBase __M_finish;
+    void**  __M_map;
+    size_t __M_map_size;
+};
+
+template <typename _Tp>
+class deque : public _DequeBase
+{
+    typedef _DequeBase _Base;
+    typedef deque<_Tp> _Self;
+
+public:
+    typedef _Tp value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+    typedef random_access_iterator_tag _IteratorCategory;
+
+    typedef _DequeIterator<_Tp, _NonConstTraits<_Tp> > iterator;
+    typedef _DequeIterator<_Tp, _ConstTraits<_Tp> > const_iterator;
+    typedef podstl::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef podstl::reverse_iterator<iterator> reverse_iterator;
+
+private:
+    typedef pointer* _MapPointer;
+
+public:
+    static size_t buffer_size() { return _S_buffer_size(sizeof(value_type)); }
+    iterator begin() { return static_cast<iterator&>(__M_start); }
+    iterator end() { return static_cast<iterator&>(__M_finish); }
+    const_iterator begin() const { return static_cast<const_iterator&>(const_cast<_DequeIteratorBase&>(__M_start)); }
+    const_iterator end() const { return static_cast<const_iterator&>(const_cast<_DequeIteratorBase&>(__M_finish)); }
+
+    reverse_iterator rbegin() { return reverse_iterator(end()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+
+    reference operator[](size_type __offset) 
+    { 
+        STL_ASSERT(__offset < size()); 
+        return begin()[static_cast<difference_type>(__offset)]; 
+    }
+
+    const_reference operator[](size_type __offset) const 
+    { 
+        STL_ASSERT(__offset < size()); 
+        return begin()[static_cast<difference_type>(__offset)]; 
+    }
+
+    reference at(size_type __offset) { return (*this)[__offset]; }
+    const_reference at(size_type __offset) const { return (*this)[__offset]; }
+
+    reference front() { return *(begin()); }
+    reference back() { return *(--end()); }
+    const_reference front() const { return *(begin()); }
+    const_reference back() const { return *(--end()); }
+
+    size_type size() const { return _M_size(sizeof(value_type)); }
+    size_type max_size() const { return static_cast<size_type>(-1); }
+    bool empty() const { return end() == begin(); }
+
+    explicit deque() : _DequeBase(0, sizeof(value_type)) {}
+
+    deque(const _Self& __other) : _DequeBase(__other.size(), sizeof(value_type))
+    {
+        copy(__other.begin(), __other.end(), begin());
+    }
+
+private:
+    void _M_initialize(const value_type& __data = value_type())
+    {
+        typedef typename _TrivialInit<_Tp>::_Ret _TrivialInit;
+        _M_fill_initialize(&__data, sizeof(value_type), _TrivialInit());
+    }
+
+public:
+    explicit deque(size_type __count) : _DequeBase(__count, sizeof(value_type))
+    { 
+        _M_initialize();
+    }
+
+    deque(size_type __count, const value_type& __data) : _DequeBase(__count, sizeof(value_type))
+    {
+        _M_fill_initialize(&__data, sizeof(value_type), _FalseType());
+    }
+
+private:
+    template <typename _InputIterator>
+    void _M_range_initialize(_InputIterator __first, _InputIterator __last, const input_iterator_tag&)
+    {
+        _M_initialize_map(0, sizeof(value_type));
+        for (; __first != __last; ++__first)
+        {
+            push_back(*__first);
+        }
+    }
+
+    template <typename _ForwardIterator>
+    void _M_range_initialize(_ForwardIterator __first, _ForwardIterator __last, const forward_iterator_tag&)
+    {
+        size_type __length = distance(__first, __last);
+        _M_initialize_map(__length, sizeof(value_type));
+        for (void** __cur_node = __M_start.__M_node; __cur_node < __M_finish.__M_node; ++__cur_node)
+        {
+            _ForwardIterator __mid = __first;
+            advance(__mid, buffer_size());
+            copy(__first, __mid, static_cast<pointer>(*__cur_node));
+            __first = __mid;
+        }
+        copy(__first, __last, static_cast<pointer>(__M_finish.__M_first));
+    }
+
+    template <typename _Integer>
+    void _M_initialize_dispatch(_Integer __count, _Integer __data, const _TrueType& /* _Integral */)
+    {
+        _M_initialize_map(__count, sizeof(value_type));
+        value_type __tmp_data = __data; // 匹配类型
+        _M_fill_initialize(&__tmp_data, sizeof(value_type), _FalseType());
+    }
+
+    template <typename _InputIter>
+    void _M_initialize_dispatch(_InputIter __first, _InputIter __last, const _FalseType& /* _Integral */)
+    {
+        _M_range_initialize(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIter));
+    }
+
+public:
+    template <typename _InputIterator>
+    deque(_InputIterator __first, _InputIterator __last)
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_initialize_dispatch(__first, __last, _Integral());
+    }
+
+    ~deque()
+    { 
+        _destroy_range(begin(), end()); 
+    }
+
+    _Self& operator = (const _Self& __other) { return static_cast<_Self&>(_M_assign(__other, sizeof(value_type))); }
+
+private:
+    template <typename _InputIter>
+    void _M_assign_aux(_InputIter __first, _InputIter __last, const input_iterator_tag&)
+    {
+        iterator __cur = begin();
+        for (; (__first != __last) && (__cur != end()); ++__cur, ++__first)
+        {
+            *__cur = *__first;
+        }
+
+        if (__cur != end())
+        {
+            erase(__cur, end());
+        }
+        else
+        {
+            insert(end(), __first, __last);
+        }
+    }
+
+    template <typename _ForwardIterator>
+    void _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last, const forward_iterator_tag&)
+    {
+        size_type __length = distance(__first, __last);
+        if (__length > size())
+        {
+            _ForwardIterator __mid = __first;
+            advance(__mid, size());
+            copy(__first, __mid, begin());
+            insert(end(), __mid, __last);
+        }
+        else
+        {
+            erase(copy(__first, __last, begin()), end());
+        }
+    }
+
+    template <typename _Integer>
+    void _M_assign_dispatch(_Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */)
+    {
+        value_type __tmp_data = __data; // 匹配类型
+        _M_fill_assign(static_cast<size_type>(__count), &__tmp_data, sizeof(value_type));
+    }
+
+    template <typename _InputIterator>
+    void _M_assign_dispatch(_InputIterator __first, _InputIterator __last, const _FalseType& /* _IsIntegral */)
+    {
+        _M_assign_aux(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIterator));
+    }
+
+public:
+    void assign(size_type __count, const _Tp& __data)
+    {
+        _M_fill_assign(__count, &__data, sizeof(__data));
+    }
+
+    template <typename _InputIterator>
+    void assign(_InputIterator __first, _InputIterator __last) 
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_assign_dispatch(__first, __last, _Integral());
+    }
+
+    void push_back(const value_type& __data) 
+    {
+        _M_push_back(&__data, sizeof(__data));
+    }
+
+    void push_front(const value_type& __data)
+    {
+        _M_push_front(&__data, sizeof(__data));
+    }
+
+    void pop_back() 
+    {
+        _M_pop_back(sizeof(value_type));
+        _destroy(static_cast<pointer>(__M_finish.__M_cur));
+    }
+
+    void pop_front() 
+    {
+        _destroy(static_cast<pointer>(__M_start.__M_cur));
+        _M_pop_front(sizeof(value_type));
+    }
+
+    iterator insert(iterator __pos, const value_type& __data) 
+    {
+        return static_cast<iterator&>(_M_insert_node(__pos, &__data, sizeof(__data)));
+    }
+
+    void insert(iterator __pos, size_type __count, const value_type& __data)
+    { 
+        _M_fill_insert(__pos, __count, &__data, sizeof(__data));
+    }
+
+private:
+    template <typename _ForwardIterator>
+    void _M_insert_range_aux(iterator __pos, _ForwardIterator __first, _ForwardIterator __last, size_type __length)
+    {
+        const difference_type __elems_before = __pos - begin();
+        difference_type __this_length = static_cast<difference_type>(size());
+        if (__elems_before <= (__this_length / 2))
+        {
+            iterator __new_start = static_cast<iterator&>(_M_reserve_elements_at_front(__length, sizeof(value_type)));
+            __pos = begin() + __elems_before;
+            iterator __dst = copy(begin(), __pos, __new_start);
+            copy(__first, __last, __dst);
+            __M_start = static_cast<_DequeIteratorBase&>(__new_start);
+        }
+        else
+        {
+            iterator __new_finish = static_cast<iterator&>(_M_reserve_elements_at_back(__length, sizeof(value_type)));
+            const difference_type __elems_after = __this_length - __elems_before;
+            __pos = end() - __elems_after;
+            copy_backward(__pos, end(), __new_finish);
+            copy(__first, __last, __pos);
+            __M_finish = static_cast<_DequeIteratorBase&>(__new_finish);
+        }
+    }
+
+    template <typename _InputIterator>
+    void _M_insert(iterator __pos, _InputIterator __first, _InputIterator __last, const input_iterator_tag&)
+    {
+        copy(__first, __last, inserter(*this, __pos));
+    }
+
+    template <typename _ForwardIterator>
+    void _M_insert(iterator __pos, _ForwardIterator __first, _ForwardIterator __last, const forward_iterator_tag&)
+    {
+        size_type __length = distance(__first, __last);
+        if (__pos == __M_start)
+        {
+            __M_start = _M_reserve_elements_at_front(__length, sizeof(value_type));
+            copy(__first, __last, begin());
+        }
+        else if (__pos == end())
+        {
+            iterator __new_finish = static_cast<iterator&>(_M_reserve_elements_at_back(__length, sizeof(value_type)));
+            copy(__first, __last, end());
+            __M_finish = __new_finish;
+        }
+        else
+        {
+            _M_insert_range_aux(__pos, __first, __last, __length);
+        }
+    }
+
+    template <typename _Integer>
+    void _M_insert_dispatch(iterator __pos, _Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */)
+    {
+        value_type __tmp_data = __data; // 匹配类型
+        _M_fill_insert(__pos, static_cast<size_type>(__count), &__tmp_data, sizeof(value_type));
+    }
+
+    template <typename _InputIterator>
+    void _M_insert_dispatch(iterator __pos, _InputIterator __first, _InputIterator __last, const _FalseType& /* _IsIntegral */) 
+    {
+        _M_insert(__pos, __first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIterator));
+    }
+
+public:
+    template <typename _InputIterator>
+    void insert(iterator __pos, _InputIterator __first, _InputIterator __last) 
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_insert_dispatch(__pos, __first, __last, _Integral());
+    }
+
+    void resize(size_type __new_size, const value_type& __fill_data = value_type()) 
+    {
+        _M_resize(__new_size, &__fill_data, sizeof(__fill_data));
+    }
+
+    iterator erase(iterator __pos) 
+    {
+        _destroy(&(*__pos));
+        return static_cast<iterator&>(_M_erase(__pos, sizeof(value_type)));
+    }
+
+    iterator erase(iterator __first, iterator __last) 
+    {
+        _destroy_range(__first, __last);
+        return static_cast<iterator&>(_M_erase(__first, __last, sizeof(value_type)));
+    }
+
+    void clear() { erase(begin(), end()); }
+
+public:
+    bool operator==(const _Self& __other) const
+    {
+        return (size() == __other.size()) && equal(begin(), end(), __other.begin());
+    }
+
+    bool operator<(const _Self& __other) const
+    {
+        return lexicographical_compare(begin(), end(), __other.begin(), __other.end());
+    }
+};
+
+template <typename _Tp>
+inline void swap(deque<_Tp>& __x, deque<_Tp>& __y) 
+{
+    __x.swap(__y);
+}
+
+}
+
+#endif // _PODSTL_DEQUE_H

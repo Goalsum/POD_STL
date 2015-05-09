@@ -1,0 +1,148 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义流缓存为string的相关类，包括stringbuf、istringstream、ostringstream、stringstream类型。
+
+#ifndef _PODSTL_SSTREAM_H
+#define _PODSTL_SSTREAM_H
+
+#include "streambuf"
+#include "iostream"
+#include "string"
+
+namespace podstl
+{
+
+class stringbuf : public streambuf 
+{
+public:                         // Typedefs.
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+
+    typedef streambuf _Base;
+    typedef stringbuf _Self;
+    typedef string _String;
+
+    // Constructors, destructor.
+    explicit stringbuf(ios_base::openmode __mode = ios_base::in | ios_base::out);
+    explicit stringbuf(const _String& __string, ios_base::openmode __mode = ios_base::in | ios_base::out);
+    virtual ~stringbuf();
+
+    // Get or set the string.
+    _String str() const { return __M_str; }
+    void str(const _String& __string);
+
+protected:                      // Overridden virtual member functions.
+    virtual int_type underflow();
+    virtual int_type uflow();
+    virtual int_type pbackfail(int_type __char);
+    virtual int_type overflow(int_type __char);
+    int_type pbackfail() { return pbackfail(EOF); }
+    int_type overflow() { return overflow(EOF); }
+
+    virtual streamsize xsputn(const char_type* __string, streamsize __length);
+    virtual streamsize _M_xsputnc(char_type __char, streamsize __count);
+
+    virtual _Base* setbuf(char_type*, streamsize __length);
+    virtual pos_type seekoff(off_type __off, ios_base::seekdir __dir, ios_base::openmode __mode = ios_base::in | ios_base::out);
+    virtual pos_type seekpos(pos_type __pos, ios_base::openmode __mode = ios_base::in | ios_base::out);
+
+private:                        // Helper functions.
+    void _M_set_ptrs();
+
+private:
+    ios_base::openmode __M_mode;
+    _String __M_str;
+};
+
+// Class istringstream, an input stream that uses a stringbuf.
+class istringstream : public istream 
+{
+public:                         // Typedefs
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+    typedef istream _Base;
+    typedef string _String;
+    typedef stringbuf _Buf;
+
+    // Constructors, destructor.
+    istringstream(ios_base::openmode __mode = ios_base::in);
+    istringstream(const _String& __str, ios_base::openmode __mode = ios_base::in);
+    ~istringstream();
+
+    stringbuf* rdbuf() const
+    {
+        return const_cast<_Buf*>(&__M_buf);
+    }
+
+    _String str() const { return __M_buf.str(); }
+    void str(const _String& __string) { __M_buf.str(__string); }
+
+private:
+    stringbuf __M_buf;
+};
+
+// Class ostringstream, an output stream that uses a stringbuf.
+class ostringstream : public ostream 
+{
+public:                         // Typedefs
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+    typedef ostream _Base;
+    typedef string _String;
+    typedef stringbuf _Buf;
+
+    // Constructors, destructor.
+    ostringstream(ios_base::openmode __mode = ios_base::out);
+    ostringstream(const _String& __str, ios_base::openmode __mode = ios_base::out);
+    ~ostringstream();
+
+    stringbuf* rdbuf() const
+    {
+        return const_cast<_Buf*>(&__M_buf);
+    }
+
+    _String str() const { return __M_buf.str(); }
+    void str(const _String& __string) { __M_buf.str(__string); }
+
+private:
+    stringbuf __M_buf;
+};
+
+// Class stringstream, a bidirectional stream that uses a stringbuf.
+class stringstream : public iostream 
+{
+public:                         // Typedefs
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+    typedef iostream _Base;
+    typedef string _String;
+    typedef stringbuf _Buf;
+    typedef ios_base::openmode openmode;
+
+    // Constructors, destructor.
+    stringstream(openmode __mod = ios_base::in | ios_base::out);
+    stringstream(const _String& __str, openmode __mod = ios_base::in | ios_base::out);
+    ~stringstream();
+
+    stringbuf* rdbuf() const
+    {
+        return const_cast<_Buf*>(&__M_buf);
+    }
+
+    _String str() const { return __M_buf.str(); }
+    void str(const _String& __string) { __M_buf.str(__string); }
+
+private:
+    stringbuf __M_buf;
+};
+
+}
+
+#endif // _PODSTL_SSTREAM_H

@@ -1,0 +1,273 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义streambuf类型。
+
+#ifndef _PODSTL_STREAMBUF_H
+#define _PODSTL_STREAMBUF_H
+
+#include "_ios_base.h"      // Needed for ios_base bitfield members.
+
+namespace podstl
+{
+
+// Class fpos, which represents a position within a file.
+template <typename _StateT>
+class fpos
+{
+public:                         // From table 88 of the C++ standard.
+    fpos(streamoff __pos) : __M_pos(__pos), __M_state(_StateT()) {}
+    fpos() : __M_pos(0), __M_state(_StateT()) {}
+
+    operator streamoff() const { return __M_pos; }
+
+    bool operator==(const fpos& __other) const
+    {
+        return __M_pos == __other.__M_pos;
+    }
+
+    bool operator!=(const fpos& __other) const
+    {
+        return __M_pos != __other.__M_pos;
+    }
+
+    fpos& operator+=(streamoff __off)
+    {
+        __M_pos += __off;
+        return *this;
+    }
+
+    fpos& operator-=(streamoff __off)
+    {
+        __M_pos -= __off;
+        return *this;
+    }
+
+    fpos operator+(streamoff __off)
+    {
+        fpos __tmp(*this);
+        __tmp += __off;
+        return __tmp;
+    }
+
+    fpos operator-(streamoff __off)
+    {
+        fpos __tmp(*this);
+        __tmp -= __off;
+        return __tmp;
+    }
+
+    // Manipulation of the state member.
+    _StateT state() const { return __M_state; }
+    void state(_StateT __state) { __M_state = __state; }
+
+private:
+    streamoff __M_pos;
+    _StateT __M_state;
+};
+
+typedef fpos<mbstate_t> streampos;
+
+// Class streambuf, the base class of the streambuf hierarchy.
+
+// A streambuf manages an input (get) area and an output (put)
+// area.  Each is described by three pointers: a beginning, an end, and a
+// current position.  streambuf contains some very simple member
+// functions that manipulate those six pointers, but almost all of the real
+// functionality gets delegated to protected virtual member functions.
+// All of the public member functions are inline, and most of the protected
+// member functions are virtual.
+
+// Although streambuf is not abstract, it is useful only as a base
+// class.  Its virtual member functions have default definitions such that
+// reading from a streambuf will always yield EOF, and writing to a
+// streambuf will always fail.
+
+class streambuf 
+{
+public:                         // Typedefs.
+    typedef char char_type;
+    typedef int int_type;
+    typedef streampos pos_type;
+    typedef streamoff off_type;
+
+private:                        // Data members.
+    char_type* __M_gbegin;         // Beginning of get area
+    char_type* __M_gnext;          // Current position within the get area
+    char_type* __M_gend;           // End of get area
+
+    char_type* __M_pbegin;         // Beginning of put area
+    char_type* __M_pnext;          // Current position within the put area
+    char_type* __M_pend;           // End of put area
+
+public:                         // Destructor.
+    virtual ~streambuf();
+
+protected:                      // The default constructor.
+    streambuf();
+
+public:                      // Protected interface to the get area.
+    char_type* eback() const { return __M_gbegin; } // Beginning
+    char_type* gptr()  const { return __M_gnext; }  // Current position
+    char_type* egptr() const { return __M_gend; }   // End
+
+    void gbump(int __n) { __M_gnext += __n; }
+
+    void setg(char_type* __gbegin, char_type* __gnext, char_type* __gend) 
+    {
+        __M_gbegin = __gbegin;
+        __M_gnext = __gnext;
+        __M_gend = __gend;
+    }
+
+    // Protected interface to the put area
+    char_type* pbase() const { return __M_pbegin; } // Beginning
+    char_type* pptr()  const { return __M_pnext; }  // Current position
+    char_type* epptr() const { return __M_pend; }   // End
+
+    void pbump(int __n) { __M_pnext += __n; }
+
+    void setp(char_type* __pbegin, char_type* __pend) 
+    {
+        __M_pbegin = __pbegin;
+        __M_pnext = __pbegin;
+        __M_pend = __pend;
+    }
+
+protected:                      // Virtual buffer management functions.
+    virtual streambuf* setbuf(char_type*, streamsize);
+
+    // Alters the stream position, using an integer offset.  In this
+    // class seekoff does nothing; subclasses are expected to override it.
+    virtual pos_type seekoff(off_type, ios_base::seekdir, ios_base::openmode = ios_base::in | ios_base::out);
+
+    // Alters the stream position, using a previously obtained streampos.  In
+    // this class seekpos does nothing; subclasses are expected to override it.
+    virtual pos_type seekpos(pos_type, ios_base::openmode = ios_base::in | ios_base::out);
+
+    // Synchronizes (i.e. flushes) the buffer.  All subclasses are expected to
+    // override this virtual member function.
+    virtual int sync();
+
+public:                         // Buffer management.
+    streambuf* pubsetbuf(char_type* __buf, streamsize __buf_size)
+    {
+        return setbuf(__buf, __buf_size);
+    }
+
+    pos_type pubseekoff(off_type __offset, ios_base::seekdir __way, ios_base::openmode __mod = ios_base::in | ios_base::out)
+    {
+        return seekoff(__offset, __way, __mod);
+    }
+
+    pos_type pubseekpos(pos_type __sp, ios_base::openmode __mod = ios_base::in | ios_base::out)
+    {
+        return seekpos(__sp, __mod);
+    }
+
+    int pubsync() { return sync(); }
+
+protected:                      
+    // Virtual get area functions, as defined in 17.5.2.4.3 and 17.5.2.4.4 of the standard.
+
+    // Returns a lower bound on the number of characters that we can read,
+    // with underflow, before reaching end of file.  (-1 is a special value:
+    // it means that underflow will fail.)  Most subclasses should probably
+    // override this virtual member function.
+    virtual streamsize showmanyc();
+
+    // Reads up to __n characters.  Return value is the number of characters read.
+    virtual streamsize xsgetn(char_type* __buf, streamsize __buf_size);
+
+    // Called when there is no read position, i.e. when gptr() is null
+    // or when gptr() >= egptr().  Subclasses are expected to override
+    // this virtual member function.
+    virtual int_type underflow();
+
+    // Similar to underflow(), but used for unbuffered input.  Most
+    // subclasses should probably override this virtual member function.
+    virtual int_type uflow();
+
+    // Called when there is no putback position, i.e. when gptr() is null
+    // or when gptr() == eback().  All subclasses are expected to override
+    // this virtual member function.
+    virtual int_type pbackfail(int_type __char = EOF);
+
+protected:                      
+    // Virtual put area functions, as defined in 27.5.2.4.5 of the standard.
+
+    // Writes up to __n characters.  Return value is the number of characters written.
+    virtual streamsize xsputn(const char_type* __src_buf, streamsize __buf_size);
+
+    // Extension: writes up to __n copies of __c.  Return value is the number of characters written.
+    virtual streamsize _M_xsputnc(char_type __char, streamsize __count);
+
+    // Called when there is no write position.  All subclasses are expected to
+    // override this virtual member function.
+    virtual int_type overflow(int_type __char = EOF);
+
+public:                         // Public members for writing characters.
+    // Write a single character.
+    int_type sputc(char_type __c) 
+    {
+        return (__M_pnext < __M_pend) ? static_cast<int>(*__M_pnext++ = __c)
+                                      : overflow(static_cast<int>(__c));
+    }
+
+    // Write __n characters.
+    streamsize sputn(const char_type* __s, streamsize __n)
+    {
+        return xsputn(__s, __n);
+    }
+
+    // Extension: write __n copies of __c.
+    streamsize _M_sputnc(char_type __c, streamsize __n)
+    {
+        return _M_xsputnc(__c, __n);
+    }
+
+private:                        // Helper functions.
+    int_type _M_snextc_underflow();
+
+public:                         // Public members for reading characters.
+    streamsize in_avail() 
+    {
+        return (__M_gnext < __M_gend) ? (__M_gend - __M_gnext) : showmanyc();
+    }
+
+    // Advance to the next character and return it.
+    int_type snextc() 
+    {
+        return (__M_gend - __M_gnext) > 1 ? static_cast<int>(*++__M_gnext) : _M_snextc_underflow();
+    }
+
+    // Return the current character and advance to the next.
+    int_type sbumpc() 
+    {
+        return (__M_gnext < __M_gend) ? static_cast<int>(*__M_gnext++) : uflow();
+    }
+
+    // Return the current character without advancing to the next.
+    int_type sgetc() 
+    {
+        return (__M_gnext < __M_gend) ? static_cast<int>(*__M_gnext) : underflow();
+    }
+
+    streamsize sgetn(char_type* __s, streamsize __n)
+    {
+        return xsgetn(__s, __n);
+    }
+
+    int_type sputbackc(char_type __c) 
+    {
+        return ((__M_gbegin < __M_gnext) && (__c == *(__M_gnext - 1)))
+               ? static_cast<int>(*--__M_gnext) : pbackfail(static_cast<int>(__c));
+    }
+
+    int_type sungetc() 
+    {
+        return (__M_gbegin < __M_gnext) ? static_cast<int>(*--__M_gnext) : pbackfail();
+    }
+};
+
+}
+
+#endif

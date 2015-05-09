@@ -1,0 +1,5 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义迭代器。
+
+#include "_iterator.h"
+#include "_stream_iterator.h"

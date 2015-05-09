@@ -1,0 +1,743 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义字符串类型。
+
+#ifndef _PODSTL_STRING_H
+#define _PODSTL_STRING_H
+
+#include "_function_base.h"
+#include "_algobase.h"
+#include "_iterator.h"
+#include "_string_base.h"
+#include "_operator.h"
+
+namespace podstl
+{
+
+struct _StringReserveT {};
+
+class string : private _StringBase
+{
+private:
+    typedef _StringBase _Base;
+    typedef string _Self;
+
+public:
+    typedef char value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef _Base::size_type size_type;
+    typedef ptrdiff_t difference_type;
+    typedef random_access_iterator_tag _IteratorCategory;
+    typedef const value_type* const_iterator;
+    typedef value_type* iterator;
+
+    typedef podstl::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef podstl::reverse_iterator<iterator> reverse_iterator;
+
+    static const size_t npos = ~static_cast<size_t>(0);
+
+    typedef _StringReserveT _ReserveT;
+
+    iterator begin()             { return _M_start(); }
+    iterator end()               { return _M_finish(); }
+    const_iterator begin() const { return _M_start(); }
+    const_iterator end()   const { return _M_finish(); }
+
+    reverse_iterator rbegin() { return reverse_iterator(end()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator rend()   const { return const_reverse_iterator(begin()); }
+
+    bool empty() const { return begin() == end(); }
+    size_type size() const     { return end() - begin(); }
+    size_type length() const   { return size(); }
+    size_type max_size() const { return _Base::max_size(); }
+
+    void resize(size_type __length, char __fill_char = _M_null())
+    {
+        if (__length <= size())
+        {
+            erase(begin() + __length, end());
+        }
+        else
+        {
+            append(__length - size(), __fill_char);
+        }
+    }
+
+    string() : _StringBase() {};
+
+    string(const _Self&);
+
+    string(const _Self& __other_string, size_type __pos, size_type __string_length = npos);
+
+    string(const char* __c_string, size_type __string_length);
+
+    string(const char* __c_string);
+
+    string(size_type __count, char __char);
+
+    template <typename _InputIterator>
+    string(_InputIterator __first, _InputIterator __last)
+    {
+        typedef typename _IsIntegral<_InputIterator>::_Ret _Integral;
+        _M_initialize_dispatch(__first, __last, _Integral());
+    }
+
+    string(const char* __first, const char* __last);
+
+    // 非对外接口。权限为public是因为有全局运算符重载需要调用它。
+    string(_ReserveT, size_t __string_length) : _StringBase(__string_length + 1)
+    {
+        _M_terminate_string();
+    }
+
+private:
+    size_type _M_compute_next_size(size_type __extra_need);
+
+    void _M_range_initialize(const char* __first, const char* __last)
+    {
+        STL_ASSERT(__first <= __last);
+        if (__first == __last) return;
+        ptrdiff_t __length = __last - __first;
+        _M_allocate_block(__length + 1);
+        __M_finish = podstl::copy(__first, __last, begin());
+        _M_terminate_string();
+    }
+
+    template <typename _InputIter>
+    void _M_range_initialize(_InputIter __first, _InputIter __last, const input_iterator_tag& __tag)
+    {
+        _M_allocate_block();
+        _M_terminate_string();
+        _M_append_t(__first, __last, __tag);
+    }
+
+    template <typename _ForwardIter>
+    void _M_range_initialize(_ForwardIter __first, _ForwardIter __last, const forward_iterator_tag&)
+    {
+        difference_type __length = distance(__first, __last);
+        _M_allocate_block(__length + 1);
+        __M_finish = podstl::copy(__first, __last, begin());
+        _M_terminate_string();
+    }
+
+    template <typename _InputIter>
+    void _M_range_initialize_t(_InputIter __first, _InputIter __last)
+    {
+        _M_range_initialize(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIter));
+    }
+
+    template <typename _Integer>
+    void _M_initialize_dispatch(_Integer __length, _Integer __char, const _TrueType& /* _Integral */) 
+    {
+        _M_allocate_block(__length + 1);
+        __M_finish = _fill_n(begin(), __length, __char);
+        _M_terminate_string();
+    }
+
+    template <typename _InputIter>
+    void _M_initialize_dispatch(_InputIter __first, _InputIter __last, const _FalseType& /*_Integral*/)
+    {
+        _M_range_initialize_t(__first, __last);
+    }
+
+public:
+    _Self& operator=(const _Self& __other_string) 
+    {
+        if (&__other_string != this)
+        {
+            _M_assign(__other_string.begin(), __other_string.end());
+        }
+        return *this;
+    }
+
+    _Self& operator=(const char* __c_string) 
+    {
+        return _M_assign(__c_string, __c_string + VOS_StrLen(__c_string));
+    }
+
+    _Self& operator=(char __char)
+    { 
+        return assign(static_cast<size_type>(1), __char);
+    }
+
+private:
+    static char _M_null()
+    { 
+        return '\0'; 
+    }
+
+    void _M_construct_null(char* __p) const
+    { 
+        *__p = _M_null();
+    }
+
+    void _M_terminate_string()
+    { 
+        _M_construct_null(end()); 
+    }
+
+    bool _M_inside(const char* __pos) const 
+    {
+        return (__pos >= begin()) && (__pos < end());
+    }
+
+private:
+    void _M_reserve(size_type __size);
+
+    void _M_reserve_and_clear(size_type __size)
+    {
+        if (__size > _M_capacity())
+        {
+            _M_deallocate_block();
+            _M_allocate_block(__size);
+        }
+    }
+
+public:
+    void reserve(size_type __length = 0);
+
+    size_type capacity() const { return _M_capacity() - 1; }
+
+    void clear();
+
+public:
+    const_reference operator[](size_type __pos) const
+    { 
+        STL_ASSERT(__pos <= size());
+        return *(begin() + __pos);
+    }
+
+    reference operator[](size_type __pos)
+    { 
+        STL_ASSERT(__pos <= size());
+        return *(begin() + __pos);
+    }
+
+    const_reference at(size_type __pos) const
+    {
+        return (*(this))[__pos];
+    }
+
+    reference at(size_type __pos)
+    {
+        return (*(this))[__pos];
+    }
+
+public:
+    _Self& operator+=(const _Self& __string) { return append(__string); }
+    _Self& operator+=(const char* __c_string) { return append(__c_string); }
+    _Self& operator+=(char __char) 
+    { 
+        push_back(__char); 
+        return *this; 
+    }
+
+private:
+    _Self& _M_append(const char* __first, const char* __last);
+
+    template <typename _InputIter>
+    _Self& _M_append_t(_InputIter __first, _InputIter __last, const input_iterator_tag &) 
+    {
+        for (; __first != __last; ++__first)
+        {
+            push_back(*__first);
+        }
+        return *this;
+    }
+
+    template <typename _ForwardIter>
+    _Self& _M_append_t(_ForwardIter __first, _ForwardIter __last, const forward_iterator_tag&) 
+    {
+        if (__first == __last) return *this;
+
+        size_type __length = static_cast<size_type>(distance(__first, __last));
+        if (__length >= _M_rest())
+        {
+            _M_reserve(_M_compute_next_size(__length));
+        }
+        __M_finish = podstl::copy(__first, __last, end());
+        _M_terminate_string()
+        return *this;
+    }
+
+    template <typename _Integer>
+    _Self& _M_append_dispatch(_Integer __count, _Integer __char, const _TrueType& /* Integral */)
+    { 
+        return append(static_cast<size_type>(__count), static_cast<char>(__char));
+    }
+
+    template <typename _InputIter>
+    _Self& _M_append_dispatch(_InputIter __first, _InputIter __last, const _FalseType& /* Integral */)
+    { 
+        return _M_append_t(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIter));
+    }
+
+public:
+    template <typename _InputIter>
+    _Self& append(_InputIter __first, _InputIter __last) 
+    {
+        typedef typename _IsIntegral<_InputIter>::_Ret _Integral;
+        return _M_append_dispatch(__first, __last, _Integral());
+    }
+
+    _Self& append(const char* __first, const char* __last)
+    {
+        return _M_append(__first, __last);
+    }
+
+    _Self& append(const _Self& __string)
+    { 
+        return _M_append(__string.begin(), __string.end());
+    }
+
+    _Self& append(const _Self& __string, size_type __pos, size_type __length) 
+    {
+        STL_ASSERT(__pos <= __string.size());
+        return _M_append(__string.begin() + __pos, __string.begin() + __pos + min(__length, __string.size() - __pos));
+    }
+
+    _Self& append(const char* __c_string, size_type __length)
+    { 
+        return _M_append(__c_string, __c_string + __length);
+    }
+
+    _Self& append(const char* __c_string)
+    { 
+        return append(__c_string, VOS_StrLen(__c_string));
+    }
+
+    _Self& append(size_type __count, char __char);
+
+    void push_back(char __char);
+
+    void pop_back();
+
+    _Self& assign(const _Self& __other_string)
+    { 
+        return _M_assign(__other_string.begin(), __other_string.end());
+    }
+
+    _Self& assign(const _Self& __string, size_type __pos, size_type __length) 
+    {
+        STL_ASSERT(__pos <= __string.size());
+        return _M_assign(__string.begin() + __pos, __string.begin() + __pos + min(__length, __string.size() - __pos));
+    }
+
+    _Self& assign(const char* __c_string, size_type __length)
+    { 
+        return _M_assign(__c_string, __c_string + __length);
+    }
+
+    _Self& assign(const char* __c_string)
+    { 
+        return assign(__c_string, VOS_StrLen(__c_string));
+    }
+
+    _Self& assign(size_type __count, char __char);
+
+    template <typename _InputIter>
+    _Self& assign(_InputIter __first, _InputIter __last)
+    {
+        typedef typename _IsIntegral<_InputIter>::_Ret _Integral;
+        return _M_assign_dispatch(__first, __last, _Integral());
+    }
+
+    _Self& assign(const char* __first, const char* __last)
+    {
+        return _M_assign(__first, __last);
+    }
+
+private:
+    _Self& _M_assign(const char* __first, const char* __last);
+
+    template <typename _Integer>
+    _Self& _M_assign_dispatch(_Integer __count, _Integer __char, const _TrueType& /* _Integral */)
+    { 
+        return assign(static_cast<size_type>(__count), static_cast<char>(__char));
+    }
+
+    template <typename _InputIter>
+    _Self& _M_assign_dispatch(_InputIter __first, _InputIter __last, const _FalseType& /* _Integral */)
+    {
+        pointer __cur = begin();
+        while ((__first != __last) && (__cur != end()))
+        {
+            *__cur = *__first;
+            ++__first;
+            ++__cur;
+        }
+
+        if (__first == __last)
+        {
+            erase(__cur, end());
+        }
+        else
+        {
+            _M_append_t(__first, __last, _PODSTL_ITERATOR_CATEGORY(_InputIter));
+        }
+        return *this;
+    }
+
+public:
+    _Self& insert(size_type __pos, const _Self& __other_string);
+
+    _Self& insert(size_type __pos, const _Self& __string, size_type __begin, size_type __length);
+
+    _Self& insert(size_type __pos, const char* __c_string, size_type __length);
+
+    _Self& insert(size_type __pos, const char* __c_string)
+    {
+        return insert(__pos, __c_string, VOS_StrLen(__c_string));
+    }
+
+    _Self& insert(size_type __pos, size_type __count, char __char);
+
+    iterator insert(iterator __pos, char __char);
+
+    void insert(iterator __pos, size_t __count, char __char);
+
+    template <typename _InputIter>
+    void insert(iterator __pos, _InputIter __first, _InputIter __last)
+    {
+        typedef typename _IsIntegral<_InputIter>::_Ret _Integral;
+        _M_insert_dispatch(__pos, __first, __last, _Integral());
+    }
+
+    void insert(iterator __pos, const char* __first, const char* __last)
+    {
+        _M_insert(__pos, __first, __last, _M_inside(__first));
+    }
+
+private:
+    void _M_insert(iterator __pos, const char* __first, const char* __last, bool __self_ref);
+
+    pointer _M_insert_aux(pointer __pos, char __char);
+
+    template <typename _Integer>
+    void _M_insert_dispatch(iterator __pos, _Integer __count, _Integer __char, const _TrueType& /* Integral */)
+    { 
+        insert(__pos, static_cast<size_type>(__count), static_cast<char>(__char));
+    }
+
+    template <typename _InputIter>
+    void _M_insert_dispatch(iterator __pos, _InputIter __first, _InputIter __last, const _FalseType& /* Integral */) 
+    {
+        // We are forced to do a temporary string to avoid the self referencing issue.
+        const _Self __string_to_insert(__first, __last);
+        _M_insert(__pos, __string_to_insert.begin(), __string_to_insert.end(), false);
+    }
+
+public:
+    _Self& erase(size_type __pos = 0, size_type __length = npos);
+
+    iterator erase(iterator __pos);
+
+    iterator erase(iterator __first, iterator __last);
+
+public:
+    _Self& replace(size_type __pos, size_type __length, const _Self& __string);
+
+    _Self& replace(size_type __pos1, size_type __length1, const _Self& __string, size_type __pos2, size_type __length2);
+
+    _Self& replace(size_type __pos, size_type __length1, const char* __c_string, size_type __length2);
+
+    _Self& replace(size_type __pos, size_type __length, const char* __c_string) 
+    {
+        return replace(__pos, __length, __c_string, VOS_StrLen(__c_string));
+    }
+
+    _Self& replace(size_type __pos, size_type __length, size_type __count, char __char);
+
+    _Self& replace(iterator __first, iterator __last, const _Self& __string) 
+    {
+        return _M_replace(__first, __last, __string.begin(), __string.end(), &__string == this);
+    }
+
+    _Self& replace(iterator __first, iterator __last, const char* __c_string, size_type __length) 
+    {
+        return _M_replace(__first, __last, __c_string, __c_string + __length, _M_inside(__c_string));
+    }
+
+    _Self& replace(iterator __first, iterator __last, const char* __c_string) 
+    {
+        return _M_replace(__first, __last, __c_string, __c_string + VOS_StrLen(__c_string), _M_inside(__c_string));
+    }
+
+    _Self& replace(iterator __first, iterator __last, size_type __count, char __char);
+
+    template <typename _InputIter>
+    _Self& replace(iterator __first, iterator __last, _InputIter __new_first, _InputIter __new_last)
+    {
+        typedef typename _IsIntegral<_InputIter>::_Ret _Integral;
+        return _M_replace_dispatch(__first, __last, __new_first, __new_last, _Integral());
+    }
+
+    _Self& replace(iterator __first, iterator __last, const char* __new_first, const char* __new_last)
+    {
+        return _M_replace(__first, __last, __new_first, __new_last, _M_inside(__new_first));
+    }
+
+private:
+    _Self& _M_replace(iterator __first, iterator __last, const char* __new_first, const char* __new_last, bool __self_ref);
+
+    template <typename _Integer>
+    _Self& _M_replace_dispatch(iterator __first, iterator __last, _Integer __count, _Integer __char, const _TrueType& /* IsIntegral */) 
+    {
+        return replace(__first, __last, static_cast<size_type>(__count), static_cast<char>(__char));
+    }
+
+    template <typename _InputIter>
+    _Self& _M_replace_dispatch(iterator __first, iterator __last, _InputIter __new_first, _InputIter __new_last, const _FalseType& /* IsIntegral */)
+    {
+        // We are forced to do a temporary string to avoid the self referencing issue.
+        const _Self __self(__new_first, __new_last);
+        return _M_replace(__first, __last, __self.begin(), __self.end(), false);
+    }
+
+public:
+    size_type copy(char* __c_string, size_type __length, size_type __pos = 0) const;
+
+    void swap(_Self& __other_string);
+
+    const char* c_str() const { return begin(); }
+    const char* data() const { return begin(); }
+
+public:
+    size_type find(const _Self& __string, size_type __pos = 0) const
+    { 
+        return find(__string.begin(), __pos, __string.size());
+    }
+
+    size_type find(const char* __c_string, size_type __pos = 0) const
+    { 
+        return find(__c_string, __pos, VOS_StrLen(__c_string));
+    }
+
+    size_type find(const char* __c_string, size_type __pos, size_type __length) const;
+
+    size_type find(char __char, size_type __pos = 0) const;
+
+public:
+    size_type rfind(const _Self& __string, size_type __pos = npos) const
+    { 
+        return rfind(__string.begin(), __pos, __string.size());
+    }
+
+    size_type rfind(const char* __c_string, size_type __pos = npos) const
+    { 
+        return rfind(__c_string, __pos, VOS_StrLen(__c_string));
+    }
+
+    size_type rfind(const char* __c_string, size_type __pos, size_type __length) const;
+    size_type rfind(char __char, size_type __pos = npos) const;
+
+public:
+    size_type find_first_of(const _Self& __string, size_type __pos = 0) const
+    { 
+        return find_first_of(__string.begin(), __pos, __string.size());
+    }
+
+    size_type find_first_of(const char* __c_string, size_type __pos = 0) const
+    { 
+        return find_first_of(__c_string, __pos, VOS_StrLen(__c_string));
+    }
+
+    size_type find_first_of(const char* __c_string, size_type __pos, size_type __length) const;
+
+    size_type find_first_of(char __char, size_type __pos = 0) const
+    { 
+        return find(__char, __pos);
+    }
+
+public:
+    size_type find_last_of(const _Self& __string, size_type __pos = npos) const
+    { 
+        return find_last_of(__string.begin(), __pos, __string.size());
+    }
+
+    size_type find_last_of(const char* __c_string, size_type __pos = npos) const
+    { 
+        return find_last_of(__c_string, __pos, VOS_StrLen(__c_string));
+    }
+
+    size_type find_last_of(const char* __c_string, size_type __pos, size_type __length) const;
+
+    size_type find_last_of(char __c, size_type __pos = npos) const
+    { 
+        return rfind(__c, __pos); 
+    }
+
+public:
+    size_type find_first_not_of(const _Self& __string, size_type __pos = 0) const
+    { 
+        return find_first_not_of(__string.begin(), __pos, __string.size());
+    }
+
+    size_type find_first_not_of(const char* __c_string, size_type __pos = 0) const
+    { 
+        return find_first_not_of(__c_string, __pos, VOS_StrLen(__c_string));
+    }
+
+    size_type find_first_not_of(const char* __c_string, size_type __pos, size_type __length) const;
+
+    size_type find_first_not_of(char __char, size_type __pos = 0) const;
+
+public:
+    size_type find_last_not_of(const _Self& __string, size_type __pos = npos) const
+    { 
+        return find_last_not_of(__string.begin(), __pos, __string.size());
+    }
+
+    size_type find_last_not_of(const char* __c_string, size_type __pos = npos) const
+    { 
+        return find_last_not_of(__c_string, __pos, VOS_StrLen(__c_string));
+    }
+
+    size_type find_last_not_of(const char* __c_string, size_type __pos, size_type __length) const;
+
+    size_type find_last_not_of(char __char, size_type __pos = npos) const;
+
+public:
+    _Self substr(size_type __pos = 0, size_type __length = npos) const
+    { 
+        return _Self(*this, __pos, __length);
+    }
+
+public:
+    int compare(const _Self& __string) const
+    { 
+        return _M_compare(begin(), end(), __string.begin(), __string.end());
+    }
+
+    int compare(size_type __pos, size_type __length, const _Self& __string) const 
+    {
+        STL_ASSERT(__pos <= size());
+        return _M_compare(begin() + __pos, begin() + __pos + min(__length, size() - __pos), __string.begin(), __string.end());
+    }
+
+    int compare(size_type __pos1, size_type __length1, const _Self& __string, size_type __pos2, size_type __length2) const 
+    {
+        STL_ASSERT((__pos1 <= size()) && (__pos2 <= __string.size()));
+        return _M_compare(begin() + __pos1, begin() + __pos1 + min(__length1, size() - __pos1),
+                          __string.begin() + __pos2, __string.begin() + __pos2 + min(__length2, __string.size() - __pos2));
+    }
+
+    int compare(const char* __c_string) const 
+    {
+        return _M_compare(begin(), end(), __c_string, __c_string + VOS_StrLen(__c_string));
+    }
+
+    int compare(size_type __pos1, size_type __length1, const char* __c_string) const
+    {
+        compare(__pos1, __length1, __c_string, VOS_StrLen(__c_string));
+    }
+
+    int compare(size_type __pos1, size_type __length1, const char* __c_string, size_type __length2) const
+    {
+        STL_ASSERT(__pos1 <= size());
+        return _M_compare(begin() + __pos1, begin() + __pos1 + min(__length1, size() - __pos1),
+                          __c_string, __c_string + __length2);
+    }
+
+public:
+    static int _M_compare(const char* __first1, const char* __last1, const char* __first2, const char* __last2);
+};
+
+inline void swap(string& __left, string& __right)
+{ 
+    __left.swap(__right);
+}
+
+string operator+(const string& __left, const string& __right);
+
+string operator+(const char* __c_string, const string& __right);
+
+string operator+(char __char, const string& __right);
+
+string operator+(const string& __left, const char* __c_string);
+
+string operator+(const string& __left, const char __char);
+
+inline bool operator==(const string& __left, const string& __right) 
+{
+    return (__left.size() == __right.size()) && (VOS_MemCmp(__left.data(), __right.data(), __left.size()) == 0);
+}
+
+inline bool operator==(const char* __c_string, const string& __right) 
+{
+    size_t __length = VOS_StrLen(__c_string);
+    return (__length == __right.size()) && (VOS_MemCmp(__c_string, __right.data(), __length) == 0);
+}
+
+inline bool operator==(const string& __left, const char* __c_string) 
+{
+    size_t __length = VOS_StrLen(__c_string);
+    return (__left.size() == __length) && (VOS_MemCmp(__left.data(), __c_string, __length) == 0);
+}
+
+inline bool operator<(const string& __left, const string& __right) 
+{
+    return string::_M_compare(__left.begin(), __left.end(), __right.begin(), __right.end()) < 0;
+}
+
+inline bool operator<(const char* __c_string, const string& __right) 
+{
+    size_t __length = VOS_StrLen(__c_string);
+    return string::_M_compare(__c_string, __c_string + __length, __right.begin(), __right.end()) < 0;
+}
+
+inline bool operator<(const string& __left, const char* __c_string) 
+{
+    size_t __length = VOS_StrLen(__c_string);
+    return string::_M_compare(__left.begin(), __left.end(), __c_string, __c_string + __length) < 0;
+}
+
+inline bool operator!=(const char* __c_string, const string& __right) 
+{
+    return !(__c_string == __right);
+}
+
+inline bool operator!=(const string& __left, const char* __c_string)
+{
+    return !(__left == __c_string);
+}
+
+inline bool operator>(const char* __c_string, const string& __right) 
+{
+    return __right < __c_string;
+}
+
+inline bool operator>(const string& __left, const char* __c_string)
+{
+    return __c_string < __left;
+}
+
+inline bool operator<=(const char* __c_string, const string& __right)
+{
+    return !(__right < __c_string);
+}
+
+inline bool operator<=(const string& __left, const char* __c_string)
+{
+    return !(__c_string < __left);
+}
+
+inline bool operator>=(const char* __c_string, const string& __right)
+{
+    return !(__c_string < __right);
+}
+
+inline bool operator>=(const string& __left, const char* __c_string)
+{
+    return !(__left < __c_string);
+}
+
+}
+
+#include "_string_io.h"
+
+#endif // _PODSTL_STRING_H

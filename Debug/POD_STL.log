@@ -1,0 +1,71 @@
+﻿生成启动时间为 2015/5/9 13:12:25。
+     1>项目“D:\POD_STL\POD_STL\POD_STL.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ID:\POD_STL\POD_STL\test\cppunit /ID:\Source_Codes\POD_STL\POD_STL\headers /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt cpp\deque.cpp cpp\list.cpp cpp\sstream.cpp cpp\string.cpp cpp\string_io.cpp cpp\vector.cpp test\charstream_test.cpp test\deque_test.cpp test\ioiter_test.cpp test\iostream_test.cpp test\list_test.cpp test\map_test.cpp test\num_put_get_test.cpp test\set_test.cpp test\sstream_test.cpp test\string_test.cpp test\vector_test.cpp
+         set_test.cpp
+         vector.cpp
+         list.cpp
+         deque.cpp
+         正在生成代码...
+         正在编译...
+         vector_test.cpp
+         string_test.cpp
+         map_test.cpp
+         list_test.cpp
+         ioiter_test.cpp
+         deque_test.cpp
+         正在生成代码...
+         正在跳过...(未检测到相关更改)
+         sstream_test.cpp
+         num_put_get_test.cpp
+         iostream_test.cpp
+         charstream_test.cpp
+         string_io.cpp
+         string.cpp
+         sstream.cpp
+       Link:
+         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\POD_STL\Debug\POD_STL.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\POD_STL\Debug\POD_STL.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\POD_STL\Debug\POD_STL.lib" /MACHINE:X86 /SAFESEH Debug\algobase.obj
+         Debug\base_depends.obj
+         Debug\delimiter.obj
+         Debug\deque.obj
+         Debug\ios.obj
+         Debug\iostream.obj
+         Debug\ios_base.obj
+         Debug\istream.obj
+         Debug\list.obj
+         Debug\locale.obj
+         Debug\num_get.obj
+         Debug\num_put.obj
+         Debug\ostream.obj
+         Debug\sstream.obj
+         Debug\streambuf.obj
+         Debug\string.obj
+         Debug\string_io.obj
+         Debug\tree.obj
+         Debug\charstream.obj
+         Debug\_bin_num_get.obj
+         Debug\_bin_num_put.obj
+         Debug\stdafx.obj
+         Debug\vector.obj
+         Debug\bincharstream_test.obj
+         Debug\charstream_test.obj
+         Debug\test_main.obj
+         Debug\deque_test.obj
+         Debug\ioiter_test.obj
+         Debug\iostream_test.obj
+         Debug\list_test.obj
+         Debug\map_test.obj
+         Debug\multiset_test.obj
+         Debug\num_put_get_test.obj
+         Debug\set_test.obj
+         Debug\sstream_test.obj
+         Debug\string_test.obj
+         Debug\vector_test.obj
+         POD_STL.vcxproj -> D:\POD_STL\Debug\POD_STL.exe
+       BscMake:
+         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"D:\POD_STL\Debug\POD_STL.bsc" /n Debug\algobase.sbr Debug\base_depends.sbr Debug\delimiter.sbr Debug\deque.sbr Debug\ios.sbr Debug\iostream.sbr Debug\ios_base.sbr Debug\istream.sbr Debug\list.sbr Debug\locale.sbr Debug\num_get.sbr Debug\num_put.sbr Debug\ostream.sbr Debug\sstream.sbr Debug\streambuf.sbr Debug\string.sbr Debug\string_io.sbr Debug\tree.sbr Debug\charstream.sbr Debug\_bin_num_get.sbr Debug\_bin_num_put.sbr Debug\stdafx.sbr Debug\vector.sbr Debug\bincharstream_test.sbr Debug\charstream_test.sbr Debug\test_main.sbr Debug\deque_test.sbr Debug\ioiter_test.sbr Debug\iostream_test.sbr Debug\list_test.sbr Debug\map_test.sbr Debug\multiset_test.sbr Debug\num_put_get_test.sbr Debug\set_test.sbr Debug\sstream_test.sbr Debug\string_test.sbr Debug\vector_test.sbr
+     1>已完成生成项目“D:\POD_STL\POD_STL\POD_STL.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.72

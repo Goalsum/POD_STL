@@ -1,0 +1,130 @@
+// 本文件是对外头文件，允许外部使用者直接包含。
+// 本文件定义用于IO操作的各种控制符。
+
+#ifndef _PODSTL_IOMANIP_H
+#define _PODSTL_IOMANIP_H
+
+#include "istream"              // Includes <ostream> and <ios>
+
+namespace podstl
+{
+
+// Machinery for defining manipulators.
+// Class that calls one of ios_base's single-argument member functions.
+template <class _Arg>
+struct _IosManip1 
+{
+    typedef _Arg (ios_base::*_FPtrType)(_Arg);
+
+    _IosManip1(_FPtrType __func, const _Arg& __arg) : __M_function(__func), __M_arg(__arg) {}
+
+    void operator()(ios_base& __ios) const
+    {
+        (__ios.*__M_function)(__M_arg);
+    }
+
+    _FPtrType __M_function;
+    _Arg __M_arg;
+};
+
+// Class that calls one of ios_base's two-argument member functions.
+struct _IosSetfManip 
+{
+    ios_base::fmtflags __M_flag;
+    ios_base::fmtflags __M_mask;
+    bool __M_two_args;
+
+    _IosSetfManip(ios_base::fmtflags __flag) : __M_flag(__flag), __M_mask(0), __M_two_args(false) {}
+    _IosSetfManip(ios_base::fmtflags __flag, ios_base::fmtflags __mask) : __M_flag(__flag), __M_mask(__mask), __M_two_args(true) {}
+
+    void operator()(ios_base& __ios) const 
+    {
+        if (__M_two_args) __ios.setf(__M_flag, __M_mask);
+        else __ios.setf(__M_flag);
+    }
+};
+
+template <typename _Arg>
+inline istream& operator>>(istream& __istream, const _IosManip1<_Arg>& __func) 
+{
+    __func(__istream);
+    return __istream;
+}
+
+template <typename _Arg>
+inline ostream& operator<<(ostream& __ostream, const _IosManip1<_Arg>& __func) 
+{
+    __func(__ostream);
+    return __ostream;
+}
+
+inline istream& operator>>(istream& __istream, const _IosSetfManip& __func) 
+{
+    __func(__istream);
+    return __istream;
+}
+
+inline ostream& operator<<(ostream& __ostream, const _IosSetfManip& __func) 
+{
+    __func(__ostream);
+    return __ostream;
+}
+
+// The ios_base manipulators.
+inline _IosSetfManip resetiosflags(ios_base::fmtflags __mask)
+{
+    return _IosSetfManip(0, __mask);
+}
+
+inline _IosSetfManip setiosflags(ios_base::fmtflags __flag)
+{
+    return _IosSetfManip(__flag);
+}
+
+inline _IosSetfManip setbase(int __base) 
+{
+    ios_base::fmtflags __base_flag = (__base == 8) ? ios_base::oct
+                                : (__base == 10) ? ios_base::dec
+                                : (__base == 16) ? ios_base::hex : ios_base::fmtflags(0);
+    return _IosSetfManip(__base_flag, ios_base::basefield);
+}
+
+inline _IosManip1<streamsize> setprecision(int __precision) 
+{
+    _IosManip1<streamsize>::_FPtrType __func = &ios_base::precision;
+    return _IosManip1<streamsize>(__func, __precision);
+}
+
+inline _IosManip1<streamsize> setw(int __width) 
+{
+    _IosManip1<streamsize>::_FPtrType __func = &ios_base::width;
+    return _IosManip1<streamsize>(__func, __width);
+}
+
+// setfill, a manipulator that operates on ios instead of ios_base.
+struct _SetfillManip 
+{
+    _SetfillManip(char __char) : __M_char(__char) {}
+    char __M_char;
+};
+
+inline ostream& operator<<(ostream& __ostream, const _SetfillManip& __manip) 
+{
+    __ostream.fill(__manip.__M_char);
+    return __ostream;
+}
+
+inline istream& operator>>(istream& __istream, const _SetfillManip& __manip) 
+{
+    __istream.fill(__manip.__M_char);
+    return __istream;
+}
+
+inline _SetfillManip setfill(char __char)
+{
+    return _SetfillManip(__char);
+}
+
+}
+
+#endif // _PODSTL_IOMANIP_H

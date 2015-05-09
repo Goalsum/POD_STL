@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cpp\base_depends.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\vector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\algobase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\vector_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\cppunit\test_main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\string.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\string_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\list.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\list_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\deque.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\deque_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\tree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\set_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\multiset_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\map_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\locale.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\ios_base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\ios.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\streambuf.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\istream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\iostream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\delimiter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\num_get.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\num_put.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\ostream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\sstream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ioiter_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\iostream_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\string_io.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\num_put_get_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\sstream_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="extend\cpp\charstream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\charstream_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="extend\cpp\_bin_num_get.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="extend\cpp\_bin_num_put.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test\bincharstream_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\_algobase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_construct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_function_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_iterator_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_pair.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_uninitialized.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\type_manips.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\type_traits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_base_depends.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_string_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_operator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\functional">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_ios_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\iostream">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_delimiter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_istreambuf_iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_num_get.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_num_put.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_ostreambuf_iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_string_io.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\_stream_iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\iterator">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="extend\headers\charstream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="extend\headers\_bin_num_get.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="extend\headers\_bin_num_put.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="extend\headers\bincharstream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="headers\vector">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\string">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\list">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\deque">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\set">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\map">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\locale">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\ios">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\streambuf">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\istream">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\numeric">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\limits">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\ostream">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\sstream">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="headers\iomanip">
+      <Filter>头文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>
