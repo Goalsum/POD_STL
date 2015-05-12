@@ -15,6 +15,8 @@ _StringBase::_StringBase(size_t __block_size)
 
 _StringBase::~_StringBase() { _M_deallocate_block(); }
 
+const size_t string::npos;
+
 string::string(const _Self& __string)
 {
     _M_range_initialize(__string.begin(), __string.end());

@@ -8,6 +8,8 @@
 namespace podstl
 {
 
+const locale::id num_get::id;
+
 int _get_digit(char __char)
 {
     if ((__char >= '0') && (__char <= '9')) return __char - '0';

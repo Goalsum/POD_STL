@@ -7,6 +7,9 @@
 namespace podstl
 {
 
+const locale::id _Delimiter::id;
+const int _Delimiter::DELIMS_MAX_COUNT;
+
 _Delimiter::_Delimiter(bool __binary_mode /* = false */) : __M_delim_set_end(__M_delim_set), __M_reverse(false)
 {
     if (__binary_mode) return;  // 没有任何分隔符

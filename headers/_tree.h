@@ -316,17 +316,20 @@ public:
 
     iterator insert_equal(const value_type& __data)
     {
-        return static_cast<iterator&>(_M_insert_equal(&__data, sizeof(_Node), sizeof(value_type)));
+        _RbTreeIteratorBase __temp = _M_insert_equal(&__data, sizeof(_Node), sizeof(value_type));
+        return *(reinterpret_cast<iterator*>(&__temp));
     }
 
     iterator insert_unique(iterator __pos, const value_type& __data)
     {
-        return static_cast<iterator&>(_M_insert_unique(__pos, &__data, sizeof(_Node), sizeof(value_type)));
+        _RbTreeIteratorBase __temp = _M_insert_unique(__pos, &__data, sizeof(_Node), sizeof(value_type));
+        return *(reinterpret_cast<iterator*>(&__temp));
     }
 
     iterator insert_equal(iterator __pos, const value_type& __data)
     {
-        return static_cast<iterator&>(_M_insert_equal(__pos, &__data, sizeof(_Node), sizeof(value_type)));
+        _RbTreeIteratorBase __temp = _M_insert_equal(__pos, &__data, sizeof(_Node), sizeof(value_type));
+        return *(reinterpret_cast<iterator*>(&__temp));
     }
 
     template<typename _InputIterator> 

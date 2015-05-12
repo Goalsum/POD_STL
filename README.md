@@ -20,8 +20,16 @@ The following documents describe POD_STL in details, in Chinese.
 
 **Design goals and implemention approaches:**
 
+[http://blog.csdn.net/qq_21895115/article/details/45639849](http://blog.csdn.net/qq_21895115/article/details/45639849)
+
 **Usage:**
+
+[http://blog.csdn.net/qq_21895115/article/details/45639857](http://blog.csdn.net/qq_21895115/article/details/45639857)
 
 **Guidlines for developers:**
 
+[http://blog.csdn.net/qq_21895115/article/details/45639867](http://blog.csdn.net/qq_21895115/article/details/45639867)
+
 **Discussion:**
+
+[http://blog.csdn.net/qq_21895115/article/details/45639877](http://blog.csdn.net/qq_21895115/article/details/45639877)

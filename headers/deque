@@ -498,7 +498,8 @@ public:
 
     iterator insert(iterator __pos, const value_type& __data) 
     {
-        return static_cast<iterator&>(_M_insert_node(__pos, &__data, sizeof(__data)));
+        _DequeIteratorBase __temp = _M_insert_node(__pos, &__data, sizeof(__data));
+        return *(reinterpret_cast<iterator*>(&__temp));
     }
 
     void insert(iterator __pos, size_type __count, const value_type& __data)
@@ -514,7 +515,8 @@ private:
         difference_type __this_length = static_cast<difference_type>(size());
         if (__elems_before <= (__this_length / 2))
         {
-            iterator __new_start = static_cast<iterator&>(_M_reserve_elements_at_front(__length, sizeof(value_type)));
+            _DequeIteratorBase __temp = _M_reserve_elements_at_front(__length, sizeof(value_type));
+            iterator __new_start = *(reinterpret_cast<iterator*>(&__temp));
             __pos = begin() + __elems_before;
             iterator __dst = copy(begin(), __pos, __new_start);
             copy(__first, __last, __dst);
@@ -522,7 +524,8 @@ private:
         }
         else
         {
-            iterator __new_finish = static_cast<iterator&>(_M_reserve_elements_at_back(__length, sizeof(value_type)));
+            _DequeIteratorBase __temp = _M_reserve_elements_at_back(__length, sizeof(value_type));
+            iterator __new_finish = *(reinterpret_cast<iterator*>(&__temp));
             const difference_type __elems_after = __this_length - __elems_before;
             __pos = end() - __elems_after;
             copy_backward(__pos, end(), __new_finish);
@@ -548,7 +551,8 @@ private:
         }
         else if (__pos == end())
         {
-            iterator __new_finish = static_cast<iterator&>(_M_reserve_elements_at_back(__length, sizeof(value_type)));
+            _DequeIteratorBase __temp = _M_reserve_elements_at_back(__length, sizeof(value_type));
+            iterator __new_finish = *(reinterpret_cast<iterator*>(&__temp));
             copy(__first, __last, end());
             __M_finish = __new_finish;
         }
@@ -587,13 +591,15 @@ public:
     iterator erase(iterator __pos) 
     {
         _destroy(&(*__pos));
-        return static_cast<iterator&>(_M_erase(__pos, sizeof(value_type)));
+        _DequeIteratorBase __temp = _M_erase(__pos, sizeof(value_type));
+        return *(reinterpret_cast<iterator*>(&__temp));
     }
 
     iterator erase(iterator __first, iterator __last) 
     {
         _destroy_range(__first, __last);
-        return static_cast<iterator&>(_M_erase(__first, __last, sizeof(value_type)));
+        _DequeIteratorBase __temp = _M_erase(__first, __last, sizeof(value_type));
+        return *(reinterpret_cast<iterator*>(&__temp));
     }
 
     void clear() { erase(begin(), end()); }

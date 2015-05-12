@@ -49,6 +49,8 @@ void _DequeIteratorBase::_M_advance(difference_type __count, size_t __unit_size)
     }
 }
 
+const size_t _DequeBase::INITIAL_MAP_SIZE;
+
 _DequeBase::~_DequeBase()
 {
     if (__M_map)

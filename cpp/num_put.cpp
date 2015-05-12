@@ -9,6 +9,8 @@
 namespace podstl
 {
 
+const locale::id num_put::id;
+
 ostreambuf_iterator _put_float(char* __str, ostreambuf_iterator __oi, ios_base& __ostream, char __fill) 
 {
     size_t __str_len = VOS_StrLen(__str);

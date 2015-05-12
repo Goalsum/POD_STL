@@ -69,6 +69,53 @@ public:
     static _Number denorm_min() { return _Number(); }
 };
 
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::digits;
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::digits10;
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::radix;
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::min_exponent;
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::min_exponent10;
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::max_exponent;
+template <typename _Number>
+const int _NumericLimitsBase<_Number>::max_exponent10;
+
+template <typename _Number>
+const float_denorm_style _NumericLimitsBase<_Number>::has_denorm;
+template <typename _Number>
+const float_round_style _NumericLimitsBase<_Number>::round_style;
+
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_specialized;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_signed;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_integer;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_exact;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::has_infinity;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::has_quiet_NaN;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::has_signaling_NaN;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::has_denorm_loss;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_iec559;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_bounded;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::is_modulo;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::traps;
+template <typename _Number>
+const bool _NumericLimitsBase<_Number>::tinyness_before;
+
 // Base class for integers.
 template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned = _Int>
 class _IntegerLimits : public _NumericLimitsBase<_Int> 
@@ -89,6 +136,25 @@ public:
 
     typedef _Unsigned _UnsignedType;
 };
+
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const int _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::digits;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const int _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::digits10;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const int _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::radix;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const bool _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::is_specialized;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const bool _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::is_signed;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const bool _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::is_integer;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const bool _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::is_exact;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const bool _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::is_bounded;
+template <typename _Int, _Int IMIN, _Int IMAX, int IDIGITS, bool IS_MOD, typename _Unsigned>
+const bool _IntegerLimits<_Int, IMIN, IMAX, IDIGITS, IS_MOD, _Unsigned>::is_modulo;
 
 // Base class for floating-point numbers.
 template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
@@ -119,6 +185,49 @@ public:
     static const bool traps = true;
     static const bool tinyness_before = false;
 };
+
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::digits;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::digits10;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::radix;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::min_exponent;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::max_exponent;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::min_exponent10;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const int _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::max_exponent10;
+
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const float_denorm_style _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::has_denorm;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const float_round_style _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::round_style;
+
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::is_specialized;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::is_signed;
+
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::has_infinity;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::has_quiet_NaN;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::has_signaling_NaN;
+
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::is_iec559;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::has_denorm_loss;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::is_bounded;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::traps;
+template <typename _Number, int DIGITS, int DIGITS10, int MINEXP, int MAXEXP, int MINEXP10, int MAXEXP10, bool ISIEC559, float_denorm_style DENORM_STYLE, float_round_style ROUND_STYLE>
+const bool _FloatingLimits<_Number, DIGITS, DIGITS10, MINEXP, MAXEXP, MINEXP10, MAXEXP10, ISIEC559, DENORM_STYLE, ROUND_STYLE>::tinyness_before;
 
 // Class numeric_limits
 

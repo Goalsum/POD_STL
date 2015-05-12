@@ -6,6 +6,42 @@
 namespace podstl
 {
 
+const int ios_base::left;
+const int ios_base::right;
+const int ios_base::internal;
+const int ios_base::dec;
+const int ios_base::hex;
+const int ios_base::oct;
+const int ios_base::fixed;
+const int ios_base::scientific;
+const int ios_base::boolalpha;
+const int ios_base::showbase;
+const int ios_base::showpoint;
+const int ios_base::showpos;
+const int ios_base::skipws;
+const int ios_base::unitbuf;
+const int ios_base::uppercase;
+const int ios_base::adjustfield;
+const int ios_base::basefield;
+const int ios_base::floatfield;
+
+const int ios_base::goodbit;
+const int ios_base::badbit;
+const int ios_base::eofbit;
+const int ios_base::failbit;
+
+const int ios_base::DEFAULT_MODE;
+const int ios_base::app;
+const int ios_base::ate;
+const int ios_base::binary;
+const int ios_base::in;
+const int ios_base::out;
+const int ios_base::trunc;
+
+const int ios_base::beg;
+const int ios_base::cur;
+const int ios_base::end;
+
 locale ios_base::imbue(const locale& __loc) 
 {
     if (__loc != __M_locale)
