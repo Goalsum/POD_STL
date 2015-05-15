@@ -2,10 +2,6 @@
 
 #include "_tree.h"
 
-
-#define __iterator__  _STLP_TYPENAME_ON_RETURN_TYPE _RbTree<_Key, _Compare, _Value, _KeyOfValue, _Traits>::iterator
-#define __size_type__  _STLP_TYPENAME_ON_RETURN_TYPE _RbTree<_Key, _Compare, _Value, _KeyOfValue, _Traits>::size_type
-
 namespace podstl
 {
 

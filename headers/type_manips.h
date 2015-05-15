@@ -4,6 +4,8 @@
 #ifndef _PODSTL_TYPE_MANIPS_H
 #define _PODSTL_TYPE_MANIPS_H
 
+#include "_base_depends.h"
+
 namespace podstl
 {
 

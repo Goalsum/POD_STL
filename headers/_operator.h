@@ -4,6 +4,8 @@
 #ifndef _PODSTL_OPERATOR_H
 #define _PODSTL_OPERATOR_H
 
+#include "_base_depends.h"
+
 namespace podstl
 {
 

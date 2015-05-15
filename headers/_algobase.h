@@ -5,7 +5,6 @@
 #define _PODSTL_ALGOBASE_H
 
 #include <limits.h>
-#include "_base_depends.h"
 #include "type_traits.h"
 #include "_iterator.h"
 #include "_function_base.h"

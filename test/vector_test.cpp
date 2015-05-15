@@ -307,15 +307,15 @@ void VectorTest::auto_ref()
     }
 
     vector<vector<ULONG_LONG> > v_v_int;
-    v_v_int.push_back();
+    v_v_int.push_back(vector<ULONG_LONG>());
     v_v_int[0] = ref;
-    v_v_int.push_back();
+    v_v_int.push_back(vector<ULONG_LONG>());
     v_v_int[1] = ref;
-    v_v_int.push_back();
+    v_v_int.push_back(vector<ULONG_LONG>());
     v_v_int[2] = ref;
-    v_v_int.push_back();
+    v_v_int.push_back(vector<ULONG_LONG>());
     v_v_int[3] = ref;
-    v_v_int.push_back();
+    v_v_int.push_back(vector<ULONG_LONG>());
     v_v_int[4] = ref;
 
     vector<vector<ULONG_LONG> >::iterator vvit(v_v_int.begin()), vvitEnd(v_v_int.end());
@@ -367,9 +367,9 @@ struct TestElementDefConstruct
 void VectorTest::element_default_contruct()
 {
     vector<TestElementDefConstruct> v;
-    v.push_back();
+    v.push_back(TestElementDefConstruct());
     CPPUNIT_ASSERT(v[0].x == DEFAULT_VALUE);
-    v.insert(v.begin());
+    v.insert(v.begin(), TestElementDefConstruct());
     CPPUNIT_ASSERT(v[0].x == DEFAULT_VALUE);
     CPPUNIT_ASSERT(v[1].x == DEFAULT_VALUE);
 
@@ -422,11 +422,11 @@ void VectorTest::string_nested()
     CPPUNIT_ASSERT(strcmp(v.begin()->c_str(), "Memory must be allocated to put me into the string") == 0);
 
     vector<string> v3;
-    v3.push_back();
+    v3.push_back(string());
     v3[0] = "zzz";
-    v3.push_back();
+    v3.push_back(string());
     v3[1] = "cba";
-    v3.push_back();
+    v3.push_back(string());
     v3[2] = "abc";
     v3.erase(v3.begin());   // 需要保证erase能够调用内部元素的析构函数，否则会内存泄露。
     CPPUNIT_ASSERT(v3[0] == "cba");

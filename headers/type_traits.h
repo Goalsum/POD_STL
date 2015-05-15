@@ -5,7 +5,6 @@
 #define _PODSTL_TYPE_TRAITS_H
 
 #include "type_manips.h"
-#include "_base_depends.h"
 
 namespace podstl
 {

@@ -4,7 +4,6 @@
 #ifndef _PODSTL_VECTOR_H
 #define _PODSTL_VECTOR_H
 
-#include "_base_depends.h"
 #include "type_traits.h"
 #include "_iterator.h"
 #include "_algobase.h"
@@ -295,12 +294,12 @@ public:
         _M_assign_dispatch(__first, __last, _Integral());
     }
 
-    void push_back(const _Tp& __element = _Tp())
+    void push_back(const _Tp& __element)
     {
         _M_push_back(&__element, sizeof(__element));
     }
 
-    iterator insert(iterator __pos, const _Tp& __element = _Tp())
+    iterator insert(iterator __pos, const _Tp& __element)
     {
         size_type __offset = __pos - begin();
         _M_fill_insert(__pos, 1, &__element, sizeof(__element));

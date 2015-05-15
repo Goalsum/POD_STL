@@ -4,6 +4,8 @@
 #ifndef _PODSTL_ITERATOR_BASE_H
 #define _PODSTL_ITERATOR_BASE_H
 
+#include "_base_depends.h"
+
 namespace podstl
 {
 
