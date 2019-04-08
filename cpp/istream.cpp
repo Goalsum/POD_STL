@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨ÒåistreamÀàµÄ·ÇÄ£°åÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰istreamç±»çš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "limits"
 #include "istream"
@@ -264,11 +269,11 @@ void istream::_M_formatted_get(char_type& __char)
     }
 }
 
-// ´ÓÊäÈëÁ÷ÖĞ³¢ÊÔÌáÈ¡Ö¸¶¨¸öÊıµÄ×Ö·û£¬²¢Ğ´ÈëÊä³ö»º³åÇø¡£
-// Óöµ½·Ö¸ô·û£¬»òÕßEOF¶¼»áÍ£Ö¹¡£µ±__extract_delimÎªtrue£¬ÇÒÓöµ½·Ö¸ô·ûÍ£Ö¹Ê±£¬ÌáÈ¡·Ö¸ô·û£¨µ«²»½«·Ö¸ô·ûĞ´Èë»º³åÇø£©¡£
-// __output_countÔÚÊäÈëÊ±Ö¸¶¨×î´óÌáÈ¡×Ö·ûÊı£¬·µ»ØÊ±¸³ÎªÊµ¼ÊÍù»º³åÇøÖĞĞ´ÈëµÄ×Ö·ûÊı¡£
-// ·µ»Ø´ÓÁ÷ÖĞÌáÈ¡µÄ×Ö·û×ÜÊı£¬×¢ÒâÔÚ__extract_delimÎªtrueÊ±£¬ÓĞ¿ÉÄÜºÍ__output_countµÄÊä³öÖµ²»ÏàµÈ¡£
-// ±¾º¯ÊıÖ»ÓÃÓÚÁ÷»º³åÇøÒÑÓÃ¾¡µÄ³¡¾°¡£
+// ä»è¾“å…¥æµä¸­å°è¯•æå–æŒ‡å®šä¸ªæ•°çš„å­—ç¬¦ï¼Œå¹¶å†™å…¥è¾“å‡ºç¼“å†²åŒºã€‚
+// é‡åˆ°åˆ†éš”ç¬¦ï¼Œæˆ–è€…EOFéƒ½ä¼šåœæ­¢ã€‚å½“__extract_delimä¸ºtrueï¼Œä¸”é‡åˆ°åˆ†éš”ç¬¦åœæ­¢æ—¶ï¼Œæå–åˆ†éš”ç¬¦ï¼ˆä½†ä¸å°†åˆ†éš”ç¬¦å†™å…¥ç¼“å†²åŒºï¼‰ã€‚
+// __output_countåœ¨è¾“å…¥æ—¶æŒ‡å®šæœ€å¤§æå–å­—ç¬¦æ•°ï¼Œè¿”å›æ—¶èµ‹ä¸ºå®é™…å¾€ç¼“å†²åŒºä¸­å†™å…¥çš„å­—ç¬¦æ•°ã€‚
+// è¿”å›ä»æµä¸­æå–çš„å­—ç¬¦æ€»æ•°ï¼Œæ³¨æ„åœ¨__extract_delimä¸ºtrueæ—¶ï¼Œæœ‰å¯èƒ½å’Œ__output_countçš„è¾“å‡ºå€¼ä¸ç›¸ç­‰ã€‚
+// æœ¬å‡½æ•°åªç”¨äºæµç¼“å†²åŒºå·²ç”¨å°½çš„åœºæ™¯ã€‚
 streamsize istream::_M_read_unbuffered(streamsize& __output_count, char_type* __output_buf, const _Delimiter& __delim, bool __extract_delim)
 {
     streambuf* __buf = rdbuf();
@@ -307,11 +312,11 @@ streamsize istream::_M_read_unbuffered(streamsize& __output_count, char_type* __
     return __count;
 }
 
-// ´ÓÊäÈëÁ÷ÖĞ³¢ÊÔÌáÈ¡Ö¸¶¨¸öÊıµÄ×Ö·û£¬²¢Ğ´ÈëÊä³ö»º³åÇø¡£
-// Óöµ½·Ö¸ô·û£¬»òÕßEOF¶¼»áÍ£Ö¹¡£µ±__extract_delimÎªtrue£¬ÇÒÓöµ½·Ö¸ô·ûÍ£Ö¹Ê±£¬ÌáÈ¡·Ö¸ô·û£¨µ«²»½«·Ö¸ô·ûĞ´Èë»º³åÇø£©¡£
-// __output_countÔÚÊäÈëÊ±Ö¸¶¨×î´óÌáÈ¡×Ö·ûÊı£¬·µ»ØÊ±¸³ÎªÊµ¼ÊÍù»º³åÇøÖĞĞ´ÈëµÄ×Ö·ûÊı¡£
-// ·µ»Ø´ÓÁ÷ÖĞÌáÈ¡µÄ×Ö·û×ÜÊı£¬×¢ÒâÔÚ__extract_delimÎªtrueÊ±£¬ÓĞ¿ÉÄÜºÍ__output_countµÄÊä³öÖµ²»ÏàµÈ¡£
-// ±¾º¯ÊıÓÃÓÚËùÓĞ³¡¾°¡£Èç¹ûÁ÷»º³åÇøÓÃ¾¡£¬Ìøµ½_M_read_unbufferedº¯Êı¼ÌĞøÖ´ĞĞ¡£
+// ä»è¾“å…¥æµä¸­å°è¯•æå–æŒ‡å®šä¸ªæ•°çš„å­—ç¬¦ï¼Œå¹¶å†™å…¥è¾“å‡ºç¼“å†²åŒºã€‚
+// é‡åˆ°åˆ†éš”ç¬¦ï¼Œæˆ–è€…EOFéƒ½ä¼šåœæ­¢ã€‚å½“__extract_delimä¸ºtrueï¼Œä¸”é‡åˆ°åˆ†éš”ç¬¦åœæ­¢æ—¶ï¼Œæå–åˆ†éš”ç¬¦ï¼ˆä½†ä¸å°†åˆ†éš”ç¬¦å†™å…¥ç¼“å†²åŒºï¼‰ã€‚
+// __output_countåœ¨è¾“å…¥æ—¶æŒ‡å®šæœ€å¤§æå–å­—ç¬¦æ•°ï¼Œè¿”å›æ—¶èµ‹ä¸ºå®é™…å¾€ç¼“å†²åŒºä¸­å†™å…¥çš„å­—ç¬¦æ•°ã€‚
+// è¿”å›ä»æµä¸­æå–çš„å­—ç¬¦æ€»æ•°ï¼Œæ³¨æ„åœ¨__extract_delimä¸ºtrueæ—¶ï¼Œæœ‰å¯èƒ½å’Œ__output_countçš„è¾“å‡ºå€¼ä¸ç›¸ç­‰ã€‚
+// æœ¬å‡½æ•°ç”¨äºæ‰€æœ‰åœºæ™¯ã€‚å¦‚æœæµç¼“å†²åŒºç”¨å°½ï¼Œè·³åˆ°_M_read_unbufferedå‡½æ•°ç»§ç»­æ‰§è¡Œã€‚
 streamsize istream::_M_read_buffered(streamsize& __output_count, char_type* __output_buf, const _Delimiter& __delim, bool __extract_delim)
 {
     streambuf* __buf = rdbuf();
@@ -401,7 +406,7 @@ istream& istream::getline(char_type* __output_buf, streamsize __count, char_type
             _Delimiter __delimiter(__delim);
             streamsize __output_count = __count - 1;
             __M_gcount = _M_read_buffered(__output_count, __output_buf, __delimiter, true);
-            if ((__output_count == (__count - 1)) && (__M_gcount == __output_count))  // »º³åÇø¶ÁÂú£¬¿´¿´ÊÇ·ñÕıºÃÓöµ½EOF»òÕß·Ö¸ô·û¡£
+            if ((__output_count == (__count - 1)) && (__M_gcount == __output_count))  // ç¼“å†²åŒºè¯»æ»¡ï¼Œçœ‹çœ‹æ˜¯å¦æ­£å¥½é‡åˆ°EOFæˆ–è€…åˆ†éš”ç¬¦ã€‚
             {
                 streambuf* __buf = rdbuf();
                 int_type __next_char = __buf->sgetc();
@@ -506,9 +511,9 @@ void istream::_M_formatted_get(char_type* __output_buf)
     width(0);
 }
 
-// ºöÂÔÖ¸¶¨¸öÊıµÄ×Ö·û¡£Óöµ½·Ö¸ô·û£¬»òÕßEOF¶¼»áÍ£Ö¹¡£µ±__extract_delimÎªtrue£¬ÇÒÓöµ½·Ö¸ô·ûÍ£Ö¹Ê±£¬ÌáÈ¡·Ö¸ô·û¡£
-// ·µ»Ø´ÓÁ÷ÖĞÌáÈ¡µÄ×Ö·û×ÜÊı¡£
-// ±¾º¯ÊıÖ»ÓÃÓÚÁ÷»º³åÇøÒÑÓÃ¾¡µÄ³¡¾°¡£
+// å¿½ç•¥æŒ‡å®šä¸ªæ•°çš„å­—ç¬¦ã€‚é‡åˆ°åˆ†éš”ç¬¦ï¼Œæˆ–è€…EOFéƒ½ä¼šåœæ­¢ã€‚å½“__extract_delimä¸ºtrueï¼Œä¸”é‡åˆ°åˆ†éš”ç¬¦åœæ­¢æ—¶ï¼Œæå–åˆ†éš”ç¬¦ã€‚
+// è¿”å›ä»æµä¸­æå–çš„å­—ç¬¦æ€»æ•°ã€‚
+// æœ¬å‡½æ•°åªç”¨äºæµç¼“å†²åŒºå·²ç”¨å°½çš„åœºæ™¯ã€‚
 streamsize istream::_M_ignore_unbuffered(streamsize __max_count, const _Delimiter& __delim, bool __extract_delim)
 {
     streambuf* __buf = rdbuf();
@@ -539,9 +544,9 @@ streamsize istream::_M_ignore_unbuffered(streamsize __max_count, const _Delimite
     return __count;
 }
 
-// ºöÂÔÖ¸¶¨¸öÊıµÄ×Ö·û¡£Óöµ½·Ö¸ô·û£¬»òÕßEOF¶¼»áÍ£Ö¹¡£µ±__extract_delimÎªtrue£¬ÇÒÓöµ½·Ö¸ô·ûÍ£Ö¹Ê±£¬ÌáÈ¡·Ö¸ô·û¡£
-// ·µ»Ø´ÓÁ÷ÖĞÌáÈ¡µÄ×Ö·û×ÜÊı¡£
-// ±¾º¯ÊıÓÃÓÚËùÓĞ³¡¾°¡£Èç¹ûÁ÷»º³åÇøÓÃ¾¡£¬Ìøµ½_M_ignore_unbufferedº¯Êı¼ÌĞøÖ´ĞĞ¡£
+// å¿½ç•¥æŒ‡å®šä¸ªæ•°çš„å­—ç¬¦ã€‚é‡åˆ°åˆ†éš”ç¬¦ï¼Œæˆ–è€…EOFéƒ½ä¼šåœæ­¢ã€‚å½“__extract_delimä¸ºtrueï¼Œä¸”é‡åˆ°åˆ†éš”ç¬¦åœæ­¢æ—¶ï¼Œæå–åˆ†éš”ç¬¦ã€‚
+// è¿”å›ä»æµä¸­æå–çš„å­—ç¬¦æ€»æ•°ã€‚
+// æœ¬å‡½æ•°ç”¨äºæ‰€æœ‰åœºæ™¯ã€‚å¦‚æœæµç¼“å†²åŒºç”¨å°½ï¼Œè·³åˆ°_M_ignore_unbufferedå‡½æ•°ç»§ç»­æ‰§è¡Œã€‚
 streamsize istream::_M_ignore_buffered(streamsize __max_count, const _Delimiter& __delim, bool __extract_delim)
 {
     streambuf* __buf = rdbuf();
@@ -557,7 +562,7 @@ streamsize istream::_M_ignore_buffered(streamsize __max_count, const _Delimiter&
         __count += __chunk;
         __buf->gbump(static_cast<int>(__chunk));
 
-        if (__delim_pos != __last)   // Óöµ½·Ö¸ô·ûÍ£Ö¹
+        if (__delim_pos != __last)   // é‡åˆ°åˆ†éš”ç¬¦åœæ­¢
         {
             if (__extract_delim)
             {
@@ -567,14 +572,14 @@ streamsize istream::_M_ignore_buffered(streamsize __max_count, const _Delimiter&
             return __count;
         }
 
-        if (__count == __max_count)     // ´ïµ½Ö¸¶¨×Ö·ûÊıÍ£Ö¹
+        if (__count == __max_count)     // è¾¾åˆ°æŒ‡å®šå­—ç¬¦æ•°åœæ­¢
         {
             return __count;
         }
 
         STL_ASSERT(__buf->gptr() == __buf->egptr());
 
-        // µ½´ïbufferÄ©Î²Ê±»¹Ã»ÓĞ´ïµ½Ö¸¶¨×Ö·ûÊı£¬¼ì²éÊÇ·ñÎÄ¼ş½áÊø¡£
+        // åˆ°è¾¾bufferæœ«å°¾æ—¶è¿˜æ²¡æœ‰è¾¾åˆ°æŒ‡å®šå­—ç¬¦æ•°ï¼Œæ£€æŸ¥æ˜¯å¦æ–‡ä»¶ç»“æŸã€‚
         if (_S_eof(__buf->sgetc()))
         {
             setstate(eofbit);
@@ -621,7 +626,7 @@ void istream::_M_skip_whitespace(bool __set_failbit)
         return;
     }
 
-    // ´Ëº¯ÊıÓÃÓÚÌø¹ı·Ö¸ô·û£¬Óöµ½·Ç·Ö¸ô·ûÍ£Ö¹¡£ĞèÒª´«ÈëÒ»¸ö·´×ªÅĞ¶Ï·Ö¸ô·û¶ÔÏó¡£
+    // æ­¤å‡½æ•°ç”¨äºè·³è¿‡åˆ†éš”ç¬¦ï¼Œé‡åˆ°éåˆ†éš”ç¬¦åœæ­¢ã€‚éœ€è¦ä¼ å…¥ä¸€ä¸ªåè½¬åˆ¤æ–­åˆ†éš”ç¬¦å¯¹è±¡ã€‚
     _M_ignore_buffered(numeric_limits<streamsize>::max(), _Delimiter(use_facet<_Delimiter>(getloc()), true), false);
     if (__set_failbit && eof())
     {
@@ -629,8 +634,8 @@ void istream::_M_skip_whitespace(bool __set_failbit)
     }
 }
 
-// ½«×Ö·ûÊä³öµ½__destÁ÷ÖĞ£¬Óöµ½·Ö¸ô·û£¬»òÕßEOF£¬»òÕßÊä³öÊ§°ÜÊ±Í£Ö¹¡£
-// ±¾º¯ÊıÖ»ÓÃÓÚÁ÷»º³åÇøÒÑÓÃ¾¡µÄ³¡¾°¡£
+// å°†å­—ç¬¦è¾“å‡ºåˆ°__destæµä¸­ï¼Œé‡åˆ°åˆ†éš”ç¬¦ï¼Œæˆ–è€…EOFï¼Œæˆ–è€…è¾“å‡ºå¤±è´¥æ—¶åœæ­¢ã€‚
+// æœ¬å‡½æ•°åªç”¨äºæµç¼“å†²åŒºå·²ç”¨å°½çš„åœºæ™¯ã€‚
 streamsize istream::_M_copy_unbuffered(streambuf* __dest, const _Delimiter& __delim, bool __extract_delim) 
 {
     streambuf* __src = rdbuf();
@@ -667,15 +672,15 @@ streamsize istream::_M_copy_unbuffered(streambuf* __dest, const _Delimiter& __de
     return __extracted;
 }
 
-// ½«×Ö·ûÊä³öµ½__destÁ÷ÖĞ£¬Óöµ½·Ö¸ô·û£¬»òÕßEOF£¬»òÕßÊä³öÊ§°ÜÊ±Í£Ö¹¡£
-// ±¾º¯ÊıÓÃÓÚËùÓĞ³¡¾°¡£Èç¹ûÁ÷»º³åÇøÓÃ¾¡£¬Ìøµ½_M_copy_unbufferedº¯Êı¼ÌĞøÖ´ĞĞ¡£
+// å°†å­—ç¬¦è¾“å‡ºåˆ°__destæµä¸­ï¼Œé‡åˆ°åˆ†éš”ç¬¦ï¼Œæˆ–è€…EOFï¼Œæˆ–è€…è¾“å‡ºå¤±è´¥æ—¶åœæ­¢ã€‚
+// æœ¬å‡½æ•°ç”¨äºæ‰€æœ‰åœºæ™¯ã€‚å¦‚æœæµç¼“å†²åŒºç”¨å°½ï¼Œè·³åˆ°_M_copy_unbufferedå‡½æ•°ç»§ç»­æ‰§è¡Œã€‚
 streamsize istream::_M_copy_buffered(streambuf* __dest, const _Delimiter& __delim, bool __extract_delim)
 {
     streambuf* __src = rdbuf();
     STL_ASSERT(__src != 0);
     streamsize __extracted = 0;
 
-    int_type __char = __src->sgetc();   // ÏÈ³éÈ¡Ò»¸ö×Ö·û£¬ÔÚ»º³åÇøÎª¿ÕµÄÊ±ºò¿ÉÒÔ´¥·¢ÖØĞÂ³äÌî¡£
+    int_type __char = __src->sgetc();   // å…ˆæŠ½å–ä¸€ä¸ªå­—ç¬¦ï¼Œåœ¨ç¼“å†²åŒºä¸ºç©ºçš„æ—¶å€™å¯ä»¥è§¦å‘é‡æ–°å……å¡«ã€‚
     for (; __src->gptr() < __src->egptr(); __char = __src->sgetc())
     {
         char_type* __first = __src->gptr();
@@ -683,7 +688,7 @@ streamsize istream::_M_copy_buffered(streambuf* __dest, const _Delimiter& __deli
 
         const char_type* __last = __delim._M_scan_for_delim(__first, __src->egptr());
         ptrdiff_t __chunk = __last - __first;
-        if ((__last != __src->egptr()) && __extract_delim) ++__chunk;   // Á¬·Ö¸ô·ûÒ»Æğ³éÈ¡
+        if ((__last != __src->egptr()) && __extract_delim) ++__chunk;   // è¿åˆ†éš”ç¬¦ä¸€èµ·æŠ½å–
 
         // Try to copy the entire input buffer to the output buffer.
         streamsize __count = __dest->sputn(__first, __chunk);
