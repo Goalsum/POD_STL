@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
  * Description: 本文件定义双端队列容器的非模板实现。
  * Author: 高尚 gaoshang@huawei.com
- * Create: 2015-06-04
+ * Create: 2015-04-07
  */
 
 #include "deque"
