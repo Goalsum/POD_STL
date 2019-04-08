@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇÄÚ²¿Í·ÎÄ¼ş(ÎÄ¼şÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåÁËÒ»Ğ©¹«ÓÃº¯Êı¶ÔÏóÀàĞÍ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰äº†ä¸€äº›å…¬ç”¨å‡½æ•°å¯¹è±¡ç±»å‹ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_FUNCTION_BASE_H
 #define _PODSTL_FUNCTION_BASE_H
@@ -138,7 +144,7 @@ struct _ConstantBinaryFun
     }
 };
 
-// ·Ç¶ÔÍâ¹«¿ª½Ó¿Ú¡£½öÓÃÓÚÈİÆ÷Àà½«±È½Ï²Ù×÷È¥Ä£°å»¯µÄÄ¿µÄ¡£
+// éå¯¹å¤–å…¬å¼€æ¥å£ã€‚ä»…ç”¨äºå®¹å™¨ç±»å°†æ¯”è¾ƒæ“ä½œå»æ¨¡æ¿åŒ–çš„ç›®çš„ã€‚
 typedef bool (*_DataUnaryPredicate)(const void* __data);
 typedef bool (*_DataBinaryPredicate)(const void* __left, const void* __right);
 
