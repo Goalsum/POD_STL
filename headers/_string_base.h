@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇÄÚ²¿Í·ÎÄ¼ş(ÎÄ¼şÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåstringÀàµÄ»ùÀà£¬°üº¬»º³åÇø¹ÜÀí²Ù×÷¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰stringç±»çš„åŸºç±»ï¼ŒåŒ…å«ç¼“å†²åŒºç®¡ç†æ“ä½œã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_STRING_BASE_H
 #define _PODSTL_STRING_BASE_H
@@ -107,7 +113,7 @@ protected:
     char* __M_finish;
     char* __M_end_of_storage;
 
-    static char s_shared_null; // ¹©ËùÓĞ¸Õ³õÊ¼»¯µÄ¿Õ×Ö·û´®¹«ÓÃ
+    static char s_shared_null; // ä¾›æ‰€æœ‰åˆšåˆå§‹åŒ–çš„ç©ºå­—ç¬¦ä¸²å…¬ç”¨
 };
 
 }
