@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òånum_putÀàĞÍ£¬ÊôÓÚlocaleÖĞµÄÒ»¸öfacet£¬ÓÃÓÚ¶¨ÖÆ½«Êı×Ö·ÅÈëÊä³öÁ÷µÄËã·¨¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰num_putç±»å‹ï¼Œå±äºlocaleä¸­çš„ä¸€ä¸ªfacetï¼Œç”¨äºå®šåˆ¶å°†æ•°å­—æ”¾å…¥è¾“å‡ºæµçš„ç®—æ³•ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #ifndef _PODSTL_NUM_PUT_H
 #define _PODSTL_NUM_PUT_H
