@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨Òåµü´úÆ÷¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰è¿­ä»£å™¨ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #include "_iterator.h"
 #include "_stream_iterator.h"
