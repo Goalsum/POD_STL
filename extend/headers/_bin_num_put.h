@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òåbin_num_putÀàĞÍ£¬ÓÃÓÚ¶¨ÖÆ½«Êı×ÖÓÃ¶ş½øÖÆ·ÅÈëÊä³öÁ÷µÄËã·¨¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰bin_num_putç±»å‹ï¼Œç”¨äºå®šåˆ¶å°†æ•°å­—ç”¨äºŒè¿›åˆ¶æ”¾å…¥è¾“å‡ºæµçš„ç®—æ³•ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #ifndef _PODSTL_BIN_NUM_PUT_H
 #define _PODSTL_BIN_NUM_PUT_H
