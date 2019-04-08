@@ -1,4 +1,9 @@
-// ���ļ����屻�õ��Ļ����⺯����ʵ�֣�ͨ����ֱ�ӵ��ö�Ӧƽ̨�Ŀ⺯������ͬƽ̨ʹ����Ӧ�������޸Ĵ��ļ�����Ӧ��Ӧ��ƽ̨��
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: 本文件定义被用到的基础库函数的实现，通常是直接调用对应平台的库函数。不同平台使用者应当自行修改此文件来适应对应的平台。
+ * Author: 高尚 gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "_base_depends.h"
 #include "cppunit_mini.h"
