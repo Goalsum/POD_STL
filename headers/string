@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨Òå×Ö·û´®ÀàĞÍ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰å­—ç¬¦ä¸²ç±»å‹ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_STRING_H
 #define _PODSTL_STRING_H
@@ -88,7 +94,7 @@ public:
 
     string(const char* __first, const char* __last);
 
-    // ·Ç¶ÔÍâ½Ó¿Ú¡£È¨ÏŞÎªpublicÊÇÒòÎªÓĞÈ«¾ÖÔËËã·ûÖØÔØĞèÒªµ÷ÓÃËü¡£
+    // éå¯¹å¤–æ¥å£ã€‚æƒé™ä¸ºpublicæ˜¯å› ä¸ºæœ‰å…¨å±€è¿ç®—ç¬¦é‡è½½éœ€è¦è°ƒç”¨å®ƒã€‚
     string(_ReserveT, size_t __string_length) : _StringBase(__string_length + 1)
     {
         _M_terminate_string();
