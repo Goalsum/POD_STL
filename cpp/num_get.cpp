@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òånum_getÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰num_getç±»çš„å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include <stdlib.h>
 #include "limits"
@@ -24,10 +29,10 @@ inline bool _is_digit(char __char)
     return (__char >= '0') && (__char <= '9');
 }
 
-// ·µ»ØÖµÊÇbit¼¯ºÏ£º
-// bit0Îª1Ê±±íÊ¾¶Áµ½ÁËÒ»¸ö×Ö·û0£¨¿ÉÄÜÊÇ±íÊ¾8½øÖÆ£¬Ò²¿ÉÄÜÊÇÊı×Ö0£©£»
-// bit1Îª1Ê±±íÊ¾ÊÇ¸ºÊı£¬·ñÔòÊÇÕıÊı¡£
-// bit2ÒÔÉÏµÄÎ»±íÊ¾½øÖÆ£¬È¡ÖµÓĞ8¡¢10¡¢16¡£
+// è¿”å›å€¼æ˜¯bité›†åˆï¼š
+// bit0ä¸º1æ—¶è¡¨ç¤ºè¯»åˆ°äº†ä¸€ä¸ªå­—ç¬¦0ï¼ˆå¯èƒ½æ˜¯è¡¨ç¤º8è¿›åˆ¶ï¼Œä¹Ÿå¯èƒ½æ˜¯æ•°å­—0ï¼‰ï¼›
+// bit1ä¸º1æ—¶è¡¨ç¤ºæ˜¯è´Ÿæ•°ï¼Œå¦åˆ™æ˜¯æ­£æ•°ã€‚
+// bit2ä»¥ä¸Šçš„ä½è¡¨ç¤ºè¿›åˆ¶ï¼Œå–å€¼æœ‰8ã€10ã€16ã€‚
 int _get_base_or_zero(istreambuf_iterator& __in_ite, istreambuf_iterator& __end, ios_base::fmtflags __flags)
 {
     bool __negative = false;
@@ -95,10 +100,10 @@ bool _get_integer(istreambuf_iterator& __first, istreambuf_iterator& __last, int
     typedef typename numeric_limits<_Integer>::_UnsignedType _Unsigned;
     _Unsigned __unsigned;;
     bool __ok = _get_integer(__first, __last, __base, __unsigned, __got, __is_negative, _FalseType());
-    if (__got <= 0) return false;    // ²»ĞŞ¸Ä__valµÄÖµ¡£
+    if (__got <= 0) return false;    // ä¸ä¿®æ”¹__valçš„å€¼ã€‚
 
     __val = static_cast<_Integer>(__unsigned);
-    if (!__ok || (__is_negative && (__val > 0)))    // Òç³ö£¬°´ÓĞ·ûºÅÊı×î´ó×îĞ¡Öµ¸³Öµ¡£
+    if (!__ok || (__is_negative && (__val > 0)))    // æº¢å‡ºï¼ŒæŒ‰æœ‰ç¬¦å·æ•°æœ€å¤§æœ€å°å€¼èµ‹å€¼ã€‚
     {
         __val = __is_negative ? numeric_limits<_Integer>::min() : numeric_limits<_Integer>::max();
         return false;
@@ -139,7 +144,7 @@ istreambuf_iterator _do_get_integer(istreambuf_iterator& __in_ite, istreambuf_it
     typedef typename _Bool2Type<numeric_limits<_Integer>::is_signed>::_Ret _IsSigned;
 
     const int __base_or_zero = _get_base_or_zero(__in_ite, __end, __istream.flags());
-    int __got = __base_or_zero & 1;    // ¼ÇÂ¼ÒÑ¾­ÌáÈ¡µÄ×Ö·ûÊı
+    int __got = __base_or_zero & 1;    // è®°å½•å·²ç»æå–çš„å­—ç¬¦æ•°
     bool __result;
 
     if (__in_ite == __end) 
@@ -281,7 +286,7 @@ istreambuf_iterator _do_get_alphabool(istreambuf_iterator& __in_ite, istreambuf_
         }
     }
 
-    // ¼ì²é×Ö·û´®Î´½áÊø¾ÍÓöµ½Á÷Ä©Î²µÄÇé¿ö¡£
+    // æ£€æŸ¥å­—ç¬¦ä¸²æœªç»“æŸå°±é‡åˆ°æµæœ«å°¾çš„æƒ…å†µã€‚
     if (__true_ok && (__truename[__count] != '\0')) __true_ok = false;
     if (__false_ok && (__falsename[__count] != '\0')) __false_ok = false;
 
