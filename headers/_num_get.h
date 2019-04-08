@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òånum_getÀàĞÍ£¬ÊôÓÚlocaleÖĞµÄÒ»¸öfacet£¬ÓÃÓÚ¶¨ÖÆ´ÓÊäÈëÁ÷ÌáÈ¡Êı×ÖµÄËã·¨¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰num_getç±»å‹ï¼Œå±äºlocaleä¸­çš„ä¸€ä¸ªfacetï¼Œç”¨äºå®šåˆ¶ä»è¾“å…¥æµæå–æ•°å­—çš„ç®—æ³•ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #ifndef _PODSTL_NUM_GET_H
 #define _PODSTL_NUM_GET_H
