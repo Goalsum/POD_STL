@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨ÒåvectorÈİÆ÷µÄ·ÇÄ£°åÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰vectorå®¹å™¨çš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "vector"
 
@@ -12,7 +17,7 @@ _VectorBase::_VectorBase(size_t __count, size_t __unit_size)
     __M_end_of_storage = _M_get_start() + (__count * __unit_size);
 }
 
-// ´«ÈëµÄÁ½¸ö²ÎÊı·Ö±ğÊÇ´ı¼ÓÈëµÄĞÂÔªËØµÄ¸öÊıºÍ´óĞ¡¡£
+// ä¼ å…¥çš„ä¸¤ä¸ªå‚æ•°åˆ†åˆ«æ˜¯å¾…åŠ å…¥çš„æ–°å…ƒç´ çš„ä¸ªæ•°å’Œå¤§å°ã€‚
 size_t _VectorBase::_M_compute_next_size(size_t __count, size_t __unit_size) const
 {
     STL_ASSERT((_M_get_finish() >= _M_get_start()) && (__count <= _M_max_size(__unit_size)));
@@ -41,7 +46,7 @@ void _VectorBase::_M_insert_overflow(void* __pos, size_t __count, const void* __
 void _VectorBase::_M_fill_insert_aux(void* __pos, size_t __count, const void* __data, size_t __unit_size)
 {
     STL_ASSERT((static_cast<char*>(__pos) >= _M_get_start()) && (static_cast<char*>(__pos) <= _M_get_finish()) && (__data != NULL));
-    bool __been_moved = false;  // ½â¾ö´ı²åÈëµÄÔªËØÔÚÔ­Ê¼ÈİÆ÷ÄÚ²¿²¢ÇÒ±»ÒÆ×ßµÄÎÊÌâ£¬false±íÊ¾´ı²åÈëµÄÔªËØ²»»á±»ÒÆ×ß
+    bool __been_moved = false;  // è§£å†³å¾…æ’å…¥çš„å…ƒç´ åœ¨åŸå§‹å®¹å™¨å†…éƒ¨å¹¶ä¸”è¢«ç§»èµ°çš„é—®é¢˜ï¼Œfalseè¡¨ç¤ºå¾…æ’å…¥çš„å…ƒç´ ä¸ä¼šè¢«ç§»èµ°
     if ((static_cast<const char*>(__data) >= static_cast<const char*>(__pos))
         && (static_cast<const char*>(__data) < _M_get_finish()))
     {
