@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇÄÚ²¿Í·ÎÄ¼ş(ÎÄ¼şÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåºìºÚÊ÷Êı¾İ½á¹¹¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰çº¢é»‘æ ‘æ•°æ®ç»“æ„ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_TREE_H
 #define _PODSTL_TREE_H
@@ -67,7 +73,7 @@ struct _RbTreeNodeBase
     _RbTreeNodeBase* _M_increment();
     _RbTreeNodeBase* _M_decrement();
 
-    // ÓÃÓÚ»ñÈ¡_RbTreeNodeÖĞ__M_value_fieldµÄÖ¸Õë£¬½öÄÜÓÃÓÚ×ÓÀà¡£ÓÉÓÚ__M_value_field¿Ï¶¨¸úÔÚ»ùÀà³ÉÔ±ºóÃæ£¬ËùÒÔ¿ÉÒÔ²ÉÈ¡ÕâÖÖËã·¨¡£
+    // ç”¨äºè·å–_RbTreeNodeä¸­__M_value_fieldçš„æŒ‡é’ˆï¼Œä»…èƒ½ç”¨äºå­ç±»ã€‚ç”±äº__M_value_fieldè‚¯å®šè·Ÿåœ¨åŸºç±»æˆå‘˜åé¢ï¼Œæ‰€ä»¥å¯ä»¥é‡‡å–è¿™ç§ç®—æ³•ã€‚
     void* _M_get_data() { return static_cast<void*>(this + 1); }
     const void* _M_get_data() const { return static_cast<const void*>(this + 1); }
 };
@@ -176,7 +182,7 @@ public:
     size_t size() const { return __M_node_count; }
     size_t max_size() const { return static_cast<size_t>(-1); }
     bool empty() const { return size() == 0; }
-    void _M_verify() const; // ½öÓÃÓÚDEBUGÄ£Ê½ÏÂµÄÊı¾İÒ»ÖÂĞÔĞ£Ñé
+    void _M_verify() const; // ä»…ç”¨äºDEBUGæ¨¡å¼ä¸‹çš„æ•°æ®ä¸€è‡´æ€§æ ¡éªŒ
 
 protected:
     _BasePtr _M_root() const { return __M_header.__M_parent; }
