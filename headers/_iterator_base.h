@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇÄÚ²¿Í·ÎÄ¼ş(ÎÄ¼şÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåÁËÒ»Ğ©¹«ÓÃµü´úÆ÷ÀàĞÍ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰äº†ä¸€äº›å…¬ç”¨è¿­ä»£å™¨ç±»å‹ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_ITERATOR_BASE_H
 #define _PODSTL_ITERATOR_BASE_H
@@ -94,7 +100,7 @@ struct _NonConstTraits
 };
 
 template <typename _Tp>
-struct _AlwaysConstTraits   // ¸øsetÈİÆ÷Ê¹ÓÃ£¬Ö»ÔÊĞíconstµü´úÆ÷
+struct _AlwaysConstTraits   // ç»™setå®¹å™¨ä½¿ç”¨ï¼Œåªå…è®¸constè¿­ä»£å™¨
 {
     typedef _Tp value_type;
     typedef const _Tp&  reference;
