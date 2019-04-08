@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨ÒåÁ÷»º´æÎªstringµÄÏà¹ØÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰æµç¼“å­˜ä¸ºstringçš„ç›¸å…³ç±»çš„å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "sstream"
 
@@ -76,7 +81,7 @@ stringbuf::int_type stringbuf::pbackfail(int_type __char)
         return __char;
     }
 
-    if (__M_mode & ios_base::out)    // Òª·Å»ØµÄ×Ö·ûÓëÁ÷ÖĞµÄ²»Í¬£¬¸²¸ÇµôÁ÷ÖĞµÄ×Ö·û¡£
+    if (__M_mode & ios_base::out)    // è¦æ”¾å›çš„å­—ç¬¦ä¸æµä¸­çš„ä¸åŒï¼Œè¦†ç›–æ‰æµä¸­çš„å­—ç¬¦ã€‚
     {
         gbump(-1);
         *gptr() = static_cast<char_type>(__char);
