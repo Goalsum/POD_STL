@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼þÊÇÄÚ²¿Í·ÎÄ¼þ(ÎÄ¼þÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊÐíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼þ¶¨ÒåÊäÈëÊä³öÁ÷µü´úÆ÷¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰è¾“å…¥è¾“å‡ºæµè¿­ä»£å™¨ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æŽ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_STREAM_ITERATOR_H
 #define _PODSTL_STREAM_ITERATOR_H
