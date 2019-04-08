@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨ÒåºìºÚÊ÷µÄ·ÇÄ£°åÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰çº¢é»‘æ ‘çš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "_tree.h"
 
@@ -50,7 +55,7 @@ _RbTreeNodeBase* _RbTreeNodeBase::_M_decrement()
         {
             __pre_node = __parent;
             __parent = __parent->__M_parent;
-            STL_ASSERT(__pre_node != __parent->__M_parent); // ²»ÔÊĞí±éÀúµ½Í·½áµã
+            STL_ASSERT(__pre_node != __parent->__M_parent); // ä¸å…è®¸éå†åˆ°å¤´ç»“ç‚¹
         }
         __pre_node = __parent;
     }
