@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇÄÚ²¿Í·ÎÄ¼ş(ÎÄ¼şÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåiosµÄ»ùÀà¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰iosçš„åŸºç±»ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_IOS_BASE_H
 #define _PODSTL_IOS_BASE_H
@@ -144,7 +150,7 @@ protected:
 
     ios_base();                   // Default constructor.
 
-    locale __M_locale;   // ×ÓÀà¿ÉÒÔ·ÃÎÊ
+    locale __M_locale;   // å­ç±»å¯ä»¥è®¿é—®
 
 private:                        // Invalidate the copy constructor and assignment operator.
     ios_base(const ios_base&);
