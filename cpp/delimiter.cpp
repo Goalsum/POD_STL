@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òå_DelimiterÀàµÄ·ÇÄ£°åÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰_Delimiterç±»çš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "_delimiter.h"
 #include "_algobase.h"
@@ -12,7 +17,7 @@ const int _Delimiter::DELIMS_MAX_COUNT;
 
 _Delimiter::_Delimiter(bool __binary_mode /* = false */) : __M_delim_set_end(__M_delim_set), __M_reverse(false)
 {
-    if (__binary_mode) return;  // Ã»ÓĞÈÎºÎ·Ö¸ô·û
+    if (__binary_mode) return;  // æ²¡æœ‰ä»»ä½•åˆ†éš”ç¬¦
 
     *__M_delim_set_end++ = '\0';
     *__M_delim_set_end++ = ' ';
