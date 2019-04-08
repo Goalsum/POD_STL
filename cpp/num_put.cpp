@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òånum_putÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æ•°å­—è¾“å‡ºçš„å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include <stdlib.h>
 #include "_num_put.h"
