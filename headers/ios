@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåiosÀàĞÍ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰iosç±»å‹ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_IOS_H
 #define _PODSTL_IOS_H
@@ -93,7 +99,7 @@ private:                        // Data members
 
 }
 
-//#include "ostream"   // ÒòÎªÊ¹ÓÃÁËostreamµÄÇ°ÏòÉùÃ÷£¬±ØĞëÒª°üº¬ostreamµÄÍêÕû¶¨Òå¡£
+//#include "ostream"   // å› ä¸ºä½¿ç”¨äº†ostreamçš„å‰å‘å£°æ˜ï¼Œå¿…é¡»è¦åŒ…å«ostreamçš„å®Œæ•´å®šä¹‰ã€‚
 
 #endif // _PODSTL_IOS_H
 
