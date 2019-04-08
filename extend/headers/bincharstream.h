@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåÁ÷»º´æÎª×Ö·ûÊı×é£¬²¢ÇÒÊı×ÖÊäÈëÊä³ö·½Ê½Îª¶ş½øÖÆµÄÏà¹ØÀà£¬°üÀ¨ibincharstream¡¢obincharstream¡¢bincharstreamÀàĞÍ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰æµç¼“å­˜ä¸ºå­—ç¬¦æ•°ç»„ï¼Œå¹¶ä¸”æ•°å­—è¾“å…¥è¾“å‡ºæ–¹å¼ä¸ºäºŒè¿›åˆ¶çš„ç›¸å…³ç±»ï¼ŒåŒ…æ‹¬ibincharstreamã€obincharstreamã€bincharstreamç±»å‹ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_BINCHARSTREAM_H
 #define _PODSTL_BINCHARSTREAM_H
