@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨ÒåË«¶Ë¶ÓÁĞÈİÆ÷µÄ·ÇÄ£°åÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰åŒç«¯é˜Ÿåˆ—å®¹å™¨çš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-06-04
+ */
 
 #include "deque"
 
@@ -135,7 +140,7 @@ void _DequeBase::_M_reallocate_map(size_t __nodes_to_add, bool __add_at_front, s
     size_t __new_num_nodes = __old_num_nodes + __nodes_to_add;
 
     void** __new_nstart;
-    if (__M_map_size > 2 * __new_num_nodes) // Ö¸ÕëmapµÄ¿Õ¼ä×ã¹»´ó£¬²»ÓÃÖØĞÂ·ÖÅä¡£Ö»ĞèÒª°ÑÊ¹ÓÃÇø¶ÎÒÆµ½ÖĞ¼ä¡£
+    if (__M_map_size > 2 * __new_num_nodes) // æŒ‡é’ˆmapçš„ç©ºé—´è¶³å¤Ÿå¤§ï¼Œä¸ç”¨é‡æ–°åˆ†é…ã€‚åªéœ€è¦æŠŠä½¿ç”¨åŒºæ®µç§»åˆ°ä¸­é—´ã€‚
     {
         __new_nstart = __M_map + ((__M_map_size - __new_num_nodes) / 2) + (__add_at_front ? __nodes_to_add : 0);
         if (__new_nstart < __M_start.__M_node)
@@ -147,7 +152,7 @@ void _DequeBase::_M_reallocate_map(size_t __nodes_to_add, bool __add_at_front, s
             copy_backward(__M_start.__M_node, __M_finish.__M_node + 1, __new_nstart + __old_num_nodes);
         }
     }
-    else    // Ö¸ÕëmapµÄ¿Õ¼ä²»×ã£¬ĞèÒªÖØĞÂ·ÖÅä¡£
+    else    // æŒ‡é’ˆmapçš„ç©ºé—´ä¸è¶³ï¼Œéœ€è¦é‡æ–°åˆ†é…ã€‚
     {
         size_t __new_map_size = __M_map_size + max(__M_map_size, __nodes_to_add) + 2;
         void** __new_map = static_cast<void**>(STL_Malloc(__new_map_size * __unit_size));
