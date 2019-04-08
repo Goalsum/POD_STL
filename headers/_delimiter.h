@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼ş¶¨Òå_DelimiterÀàĞÍ£¬ÊôÓÚlocaleÖĞµÄÒ»¸öfacet£¬ÓÃÓÚ¶¨ÖÆÊäÈëÁ÷µÄ·Ö¸ô·ûºÅ¡£
-// _Delimiter²»ÊôÓÚSTL±ê×¼¹æ·¶£¬ÊÇPODSTLµÄ×Ô¶¨ÒåÀ©Õ¹¹¦ÄÜ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰_Delimiterç±»å‹ï¼Œå±äºlocaleä¸­çš„ä¸€ä¸ªfacetï¼Œç”¨äºå®šåˆ¶è¾“å…¥æµçš„åˆ†éš”ç¬¦å·ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// _Delimiterä¸å±äºSTLæ ‡å‡†è§„èŒƒï¼Œæ˜¯PODSTLçš„è‡ªå®šä¹‰æ‰©å±•åŠŸèƒ½ã€‚
 
 #ifndef _PODSTL_DELIMITER_H
 #define _PODSTL_DELIMITER_H
@@ -27,7 +33,7 @@ private:
     static const int DELIMS_MAX_COUNT = 16;
     char __M_delim_set[DELIMS_MAX_COUNT];
     char* __M_delim_set_end;
-    bool __M_reverse;   // µ±ÎªtrueÊ±£¬_M_is_delimµÄÅĞ¶Ï±ê×¼·´×ª£¬¶ÔËùÓĞ·Ç·Ö¸ô·û·µ»Øtrue£¬·Ö¸ô·û·µ»Øfalse¡£
+    bool __M_reverse;   // å½“ä¸ºtrueæ—¶ï¼Œ_M_is_delimçš„åˆ¤æ–­æ ‡å‡†åè½¬ï¼Œå¯¹æ‰€æœ‰éåˆ†éš”ç¬¦è¿”å›trueï¼Œåˆ†éš”ç¬¦è¿”å›falseã€‚
 };
 
 }
