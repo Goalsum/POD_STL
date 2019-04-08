@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇÄÚ²¿Í·ÎÄ¼ş(ÎÄ¼şÃûÒÔÏÂ»®Ïß¿ªÍ·)£¬²»ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåÁËÒ»Ğ©¹«ÓÃ»ù´¡Ëã·¨¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰äº†ä¸€äº›å…¬ç”¨åŸºç¡€ç®—æ³•ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å†…éƒ¨å¤´æ–‡ä»¶(æ–‡ä»¶åä»¥ä¸‹åˆ’çº¿å¼€å¤´)ï¼Œä¸å…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_ALGOBASE_H
 #define _PODSTL_ALGOBASE_H
@@ -55,7 +61,7 @@ inline _OutputIter _copy(_InputIter __first, _InputIter __last, _OutputIter __re
     return __result;
 }
 
-// ¶ÔÓÚRandom Iterator£¬Ê¹ÓÃ±íÊ¾¾àÀëµÄÕûĞÍ±äÁ¿×÷ÎªÑ­»·¿ØÖÆ±äÁ¿¿ÉÒÔÌá¸ßĞÔÄÜ¡£
+// å¯¹äºRandom Iteratorï¼Œä½¿ç”¨è¡¨ç¤ºè·ç¦»çš„æ•´å‹å˜é‡ä½œä¸ºå¾ªç¯æ§åˆ¶å˜é‡å¯ä»¥æé«˜æ€§èƒ½ã€‚
 template <typename _RandomAccessIter, typename _OutputIter, typename _Distance>
 inline _OutputIter _copy(_RandomAccessIter __first, _RandomAccessIter __last, _OutputIter __result, const random_access_iterator_tag&, _Distance*)
 {
@@ -68,7 +74,7 @@ inline _OutputIter _copy(_RandomAccessIter __first, _RandomAccessIter __last, _O
     return __result;
 }
 
-// ÓĞĞ©ÀàĞÍÓÃmemmoveÓĞ×îºÃµÄĞÔÄÜ¡£×¢Òâ²»ÄÜÓÃmemcpy£¬ÒòÎªÖ¸ÕëÖ¸ÏòÇøÓòÓĞ¿ÉÄÜÖØµş¡£
+// æœ‰äº›ç±»å‹ç”¨memmoveæœ‰æœ€å¥½çš„æ€§èƒ½ã€‚æ³¨æ„ä¸èƒ½ç”¨memcpyï¼Œå› ä¸ºæŒ‡é’ˆæŒ‡å‘åŒºåŸŸæœ‰å¯èƒ½é‡å ã€‚
 void* _copy_trivial(const void* __first, const void* __last, void* __result);
 
 template <typename _InputIter, typename _OutputIter>
@@ -112,7 +118,7 @@ inline _BidirectionalIter2 _copy_backward(_BidirectionalIter1 __first, _Bidirect
     return __result;
 }
 
-// ¶ÔÓÚRandom Iterator£¬Ê¹ÓÃ±íÊ¾¾àÀëµÄÕûĞÍ±äÁ¿×÷ÎªÑ­»·¿ØÖÆ±äÁ¿¿ÉÒÔÌá¸ßĞÔÄÜ¡£
+// å¯¹äºRandom Iteratorï¼Œä½¿ç”¨è¡¨ç¤ºè·ç¦»çš„æ•´å‹å˜é‡ä½œä¸ºå¾ªç¯æ§åˆ¶å˜é‡å¯ä»¥æé«˜æ€§èƒ½ã€‚
 template <typename _RandomAccessIter, typename _BidirectionalIter, typename _Distance>
 inline _BidirectionalIter _copy_backward(_RandomAccessIter __first, _RandomAccessIter __last, _BidirectionalIter __result,
                                           const random_access_iterator_tag&, _Distance*)
@@ -124,7 +130,7 @@ inline _BidirectionalIter _copy_backward(_RandomAccessIter __first, _RandomAcces
     return __result;
 }
 
-// ÓĞĞ©ÀàĞÍÓÃmemmoveÓĞ×îºÃµÄĞÔÄÜ¡£×¢Òâ²»ÄÜÓÃmemcpy£¬ÒòÎªÖ¸ÕëÖ¸ÏòÇøÓòÓĞ¿ÉÄÜÖØµş¡£
+// æœ‰äº›ç±»å‹ç”¨memmoveæœ‰æœ€å¥½çš„æ€§èƒ½ã€‚æ³¨æ„ä¸èƒ½ç”¨memcpyï¼Œå› ä¸ºæŒ‡é’ˆæŒ‡å‘åŒºåŸŸæœ‰å¯èƒ½é‡å ã€‚
 void* _copy_trivial_backward(const void* __first, const void* __last, void* __result);
 
 template <typename _InputIter, typename _OutputIter>
@@ -172,7 +178,7 @@ inline void _fill(_ForwardIter __first, _ForwardIter __last, const _Tp& __val, c
     _fill_fwd(__first, __last, __val);
 }
 
-// ¶ÔÓÚRandom Iterator£¬Ê¹ÓÃ±íÊ¾¾àÀëµÄÕûĞÍ±äÁ¿×÷ÎªÑ­»·¿ØÖÆ±äÁ¿¿ÉÒÔÌá¸ßĞÔÄÜ¡£
+// å¯¹äºRandom Iteratorï¼Œä½¿ç”¨è¡¨ç¤ºè·ç¦»çš„æ•´å‹å˜é‡ä½œä¸ºå¾ªç¯æ§åˆ¶å˜é‡å¯ä»¥æé«˜æ€§èƒ½ã€‚
 template <typename _RandomAccessIter, typename _Tp, typename _Distance>
 inline void _fill(_RandomAccessIter __first, _RandomAccessIter __last, const _Tp& __val, const random_access_iterator_tag&, _Distance*)
 {
@@ -433,13 +439,13 @@ _InputIter find_if(_InputIter __first, _InputIter __last, _Predicate __pred)
 template <typename _ForwardIter1, typename _ForwardIter2>
 _ForwardIter1 search(_ForwardIter1 __first1, _ForwardIter1 __last1, _ForwardIter2 __first2, _ForwardIter2 __last2)
 {
-    // ¼ì²é¿Õ¼¯ºÏ
+    // æ£€æŸ¥ç©ºé›†åˆ
     if ((__first1 == __last1) || (__first2 == __last2))
     {
         return __first1;
     }
 
-    // ¶ÔÓÚ±»²éÕÒ´®Ö»ÓĞÒ»¸öÔªËØµÄÇé¿ö£¬ÌØÊâ´¦Àí¡£
+    // å¯¹äºè¢«æŸ¥æ‰¾ä¸²åªæœ‰ä¸€ä¸ªå…ƒç´ çš„æƒ…å†µï¼Œç‰¹æ®Šå¤„ç†ã€‚
     _ForwardIter2 __p1(__first2);
     if (++__p1 == __last2)
     {
@@ -477,13 +483,13 @@ _ForwardIter1 search(_ForwardIter1 __first1, _ForwardIter1 __last1, _ForwardIter
 template <typename _ForwardIter1, typename _ForwardIter2, typename _BinaryPred>
 _ForwardIter1 search(_ForwardIter1 __first1, _ForwardIter1 __last1, _ForwardIter2 __first2, _ForwardIter2 __last2, _BinaryPred __predicate)
 {
-    // ¼ì²é¿Õ¼¯ºÏ
+    // æ£€æŸ¥ç©ºé›†åˆ
     if ((__first1 == __last1) || (__first2 == __last2))
     {
         return __first1;
     }
 
-    // ¶ÔÓÚ±»²éÕÒ´®Ö»ÓĞÒ»¸öÔªËØµÄÇé¿ö£¬ÌØÊâ´¦Àí¡£
+    // å¯¹äºè¢«æŸ¥æ‰¾ä¸²åªæœ‰ä¸€ä¸ªå…ƒç´ çš„æƒ…å†µï¼Œç‰¹æ®Šå¤„ç†ã€‚
     _ForwardIter2 __p1(__first2);
     if (++__p1 == __last2)
     {
