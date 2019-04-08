@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåÁ÷»º´æÎªÓÃ»§Ö¸¶¨´óĞ¡×Ö·ûÊı×éµÄÏà¹ØÀà£¬°üÀ¨charbuf¡¢icharstream¡¢ocharstream¡¢charstreamÀàĞÍ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰æµç¼“å­˜ä¸ºç”¨æˆ·æŒ‡å®šå¤§å°å­—ç¬¦æ•°ç»„çš„ç›¸å…³ç±»ï¼ŒåŒ…æ‹¬charbufã€icharstreamã€ocharstreamã€charstreamç±»å‹ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_CHARSTREAM_H
 #define _PODSTL_CHARSTREAM_H
