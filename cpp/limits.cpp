@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨ÒålimitsÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: limitsçš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "limits"
 
