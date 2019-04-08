@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òåios_baseÀàµÄ·ÇÄ£°åÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰ios_baseç±»çš„éæ¨¡æ¿å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "algorithm"
 #include "_ios_base.h"
