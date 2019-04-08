@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåÁ´±íÈİÆ÷¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰é“¾è¡¨å®¹å™¨ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_LIST_H
 #define _PODSTL_LIST_H
@@ -17,7 +23,7 @@ struct _ListNodeBase
     _ListNodeBase* __M_next;
     _ListNodeBase* __M_prev;
 
-    // ÓÃÓÚ»ñÈ¡_ListNodeÖĞ__M_dataµÄÖ¸Õë£¬½öÄÜÓÃÓÚ×ÓÀà¡£ÓÉÓÚ__M_data¿Ï¶¨¸úÔÚ»ùÀà³ÉÔ±ºóÃæ£¬ËùÒÔ¿ÉÒÔ²ÉÈ¡ÕâÖÖËã·¨¡£
+    // ç”¨äºè·å–_ListNodeä¸­__M_dataçš„æŒ‡é’ˆï¼Œä»…èƒ½ç”¨äºå­ç±»ã€‚ç”±äº__M_dataè‚¯å®šè·Ÿåœ¨åŸºç±»æˆå‘˜åé¢ï¼Œæ‰€ä»¥å¯ä»¥é‡‡å–è¿™ç§ç®—æ³•ã€‚
     void* _M_get_data() { return static_cast<void*>(this + 1); }
     const void* _M_get_data() const { return static_cast<const void*>(this + 1); }
 };
@@ -154,7 +160,7 @@ protected:
     void _M_resize(size_t __new_size, size_t __node_size, const void* __fill_data, size_t __data_size);
     void _M_fill_assign(size_t __count, size_t __node_size, const void* __data, size_t __data_size);
 
-    // °Ñ[__first, __last)ÕâÒ»¶ÎÁ´±í½Óµ½__positionÖ®Ç°µÄÎ»ÖÃÉÏ¡£
+    // æŠŠ[__first, __last)è¿™ä¸€æ®µé“¾è¡¨æ¥åˆ°__positionä¹‹å‰çš„ä½ç½®ä¸Šã€‚
     static void _M_transfer(_NodeBase* __position, _NodeBase* __first, _NodeBase* __last);
 
     void _M_remove(const void* __data, _DataBinaryPredicate __equal_pfn);
@@ -275,7 +281,7 @@ private:
     template<typename _Integer>
     void _M_insert_dispatch(iterator __pos, _Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */) 
     {
-        value_type __tmp_data = __data; // Æ¥ÅäÀàĞÍ
+        value_type __tmp_data = __data; // åŒ¹é…ç±»å‹
         _M_fill_insert(__pos, __count, sizeof(_Node), &__tmp_data, sizeof(value_type));
     }
 
@@ -339,7 +345,7 @@ private:
     template <typename _Integer>
     void _M_assign_dispatch(_Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */)
     {
-        value_type __tmp_data = __data; // Æ¥ÅäÀàĞÍ
+        value_type __tmp_data = __data; // åŒ¹é…ç±»å‹
         _M_fill_assign(static_cast<size_t>(__count), sizeof(_Node), &__tmp_data, sizeof(__data));
     }
 
