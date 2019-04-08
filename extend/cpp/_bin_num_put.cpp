@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òåbin_num_putÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: äºŒè¿›åˆ¶æ•°æ®å†™å…¥
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "_bin_num_put.h"
 #include "_algobase.h"
