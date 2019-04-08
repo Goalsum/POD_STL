@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼ş¶¨Òå×Ö·û´®µÄÊäÈëÊä³ö²Ù×÷µÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰å­—ç¬¦ä¸²çš„è¾“å…¥è¾“å‡ºæ“ä½œçš„å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "_string_io.h"
 
