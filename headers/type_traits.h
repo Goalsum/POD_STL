@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼þÊÇ¶ÔÍâÍ·ÎÄ¼þ£¬ÔÊÐíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼þ¶¨Òå»ù±¾ÀàÐÍÊôÐÔÊ¶±ð¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰åŸºæœ¬ç±»åž‹å±žæ€§è¯†åˆ«ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æŽ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_TYPE_TRAITS_H
 #define _PODSTL_TYPE_TRAITS_H
