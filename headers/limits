@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨Òå»ù±¾Êı¾İÀàĞÍÊôĞÔ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰åŸºæœ¬æ•°æ®ç±»å‹å±æ€§ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_LIMITS
 #define _PODSTL_LIMITS
@@ -125,7 +131,7 @@ public:
     static _Int max() { return IMAX; }
 
     static const int digits = (IDIGITS < 0) ? ((sizeof(_Int) * CHAR_BIT) - ((IMIN == 0) ? 0 : 1)) : IDIGITS;
-    static const int digits10 = (digits * 301UL) / 1000;    // ¼ÆËãÒÔÊ®½øÖÆ¿ÆÑ§¼ÆÊı·¨±íÊ¾£¬Ö¸ÊıÊÇ¶àÉÙ
+    static const int digits10 = (digits * 301UL) / 1000;    // è®¡ç®—ä»¥åè¿›åˆ¶ç§‘å­¦è®¡æ•°æ³•è¡¨ç¤ºï¼ŒæŒ‡æ•°æ˜¯å¤šå°‘
     static const int radix = 2;
     static const bool is_specialized = true;
     static const bool is_signed = (IMIN != 0);
