@@ -1,6 +1,11 @@
-// ±¾ÎÄ¼ş¶¨ÒåÁ÷»º´æÎªÓÃ»§Ö¸¶¨´óĞ¡×Ö·ûÊı×éµÄÏà¹ØÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰æµç¼“å­˜ä¸ºç”¨æˆ·æŒ‡å®šå¤§å°å­—ç¬¦æ•°ç»„çš„ç›¸å…³ç±»çš„å®ç°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
-// ±¾ÎÄ¼ş¶¨ÒåÁ÷»º´æÎªstringµÄÏà¹ØÀàµÄÊµÏÖ¡£
+// æœ¬æ–‡ä»¶å®šä¹‰æµç¼“å­˜ä¸ºstringçš„ç›¸å…³ç±»çš„å®ç°ã€‚
 
 #include "charstream.h"
 
@@ -50,7 +55,7 @@ charbuf::int_type charbuf::pbackfail(int_type __char)
     if (gptr() == eback()) return EOF;
     STL_ASSERT(gptr() > eback());
 
-    if (__M_mode & ios_base::out)    // Òª·Å»ØµÄ×Ö·ûÓëÁ÷ÖĞµÄ²»Í¬£¬¸²¸ÇµôÁ÷ÖĞµÄ×Ö·û¡£
+    if (__M_mode & ios_base::out)    // è¦æ”¾å›çš„å­—ç¬¦ä¸æµä¸­çš„ä¸åŒï¼Œè¦†ç›–æ‰æµä¸­çš„å­—ç¬¦ã€‚
     {
         gbump(-1);
         *gptr() = static_cast<char_type>(__char);
