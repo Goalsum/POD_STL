@@ -1,4 +1,9 @@
-// ±¾ÎÄ¼þ¶¨Òå×Ö·û´®ÀàµÄÊµÏÖ¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰å­—ç¬¦ä¸²ç±»çš„å®žçŽ°ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
 
 #include "string"
 #include "functional"
@@ -6,7 +11,7 @@
 namespace podstl
 {
 
-char _StringBase::s_shared_null = '\0'; // ¹©ËùÓÐ¸Õ³õÊ¼»¯µÄ¿Õ×Ö·û´®¹«ÓÃ
+char _StringBase::s_shared_null = '\0'; // ä¾›æ‰€æœ‰åˆšåˆå§‹åŒ–çš„ç©ºå­—ç¬¦ä¸²å…¬ç”¨
 
 _StringBase::_StringBase(size_t __block_size)
 {
@@ -210,7 +215,7 @@ void string::insert(iterator __pos, size_t __count, char __char)
     pointer __new_pos = __pos;
     if (_M_rest() > __count)
     {
-        VOS_memmove_s(__pos + __count, _M_end_of_storage() - (__pos + __count), __pos, end() - __pos + 1); // °üÀ¨NULL
+        VOS_memmove_s(__pos + __count, _M_end_of_storage() - (__pos + __count), __pos, end() - __pos + 1); // åŒ…æ‹¬NULL
         VOS_memset_s(__pos, _M_end_of_storage() - __pos, __char, __count);
         __M_finish += __count;
     }
@@ -221,7 +226,7 @@ void string::insert(iterator __pos, size_t __count, char __char)
         pointer __new_finish = podstl::copy(begin(), __pos, __new_start);
         VOS_memset_s(__new_finish, __new_len - (__pos - begin()), __char, __count);
         __new_finish += __count;
-        __new_finish = podstl::copy(__pos, end() + 1, __new_finish) - 1;    // °üÀ¨NULL
+        __new_finish = podstl::copy(__pos, end() + 1, __new_finish) - 1;    // åŒ…æ‹¬NULL
         _M_deallocate_block();
         _M_reset(__new_start, __new_finish, __new_start + __new_len);
     }
@@ -235,12 +240,12 @@ void string::_M_insert(iterator __pos, const char* __first, const char* __last, 
     const size_t __length = __last - __first;
     if (_M_rest() > __length)
     {
-        podstl::copy(__pos, end() + 1, __pos + __length); // °üÀ¨NULL
+        podstl::copy(__pos, end() + 1, __pos + __length); // åŒ…æ‹¬NULL
         if (!__self_ref || (__first < __pos))
         {
             podstl::copy(__first, __last, __pos);
         }
-        else    // Ô­Ê¼Êý¾ÝËæ×Å±»ÒÆ×ßÁË
+        else    // åŽŸå§‹æ•°æ®éšç€è¢«ç§»èµ°äº†
         {
             podstl::copy(__first + __length, __last + __length, __pos);
         }
@@ -252,7 +257,7 @@ void string::_M_insert(iterator __pos, const char* __first, const char* __last, 
         pointer __new_start = static_cast<pointer>(STL_Malloc(__new_len));
         pointer __new_finish = podstl::copy(begin(), __pos, __new_start);
         __new_finish = podstl::copy(__first, __last, __new_finish);
-        __new_finish = podstl::copy(__pos, end() + 1, __new_finish) - 1;    // °üÀ¨NULL
+        __new_finish = podstl::copy(__pos, end() + 1, __new_finish) - 1;    // åŒ…æ‹¬NULL
         _M_deallocate_block();
         _M_reset(__new_start, __new_finish, __new_start + __new_len);
     }
@@ -263,7 +268,7 @@ char* string::_M_insert_aux(char* __pos, char __char)
     pointer __new_pos = __pos;
     if (_M_rest() > 1)
     {
-        VOS_memmove_s(__pos + 1, _M_end_of_storage() - (__pos + 1), __pos, end() - __pos + 1); // °üÀ¨NULL
+        VOS_memmove_s(__pos + 1, _M_end_of_storage() - (__pos + 1), __pos, end() - __pos + 1); // åŒ…æ‹¬NULL
         *__pos = __char;
         ++__M_finish;
     }
@@ -274,7 +279,7 @@ char* string::_M_insert_aux(char* __pos, char __char)
         __new_pos = podstl::copy(begin(), __pos, __new_start);
         *__new_pos = __char;
         pointer __new_finish = __new_pos + 1;
-        __new_finish = podstl::copy(__pos, end() + 1, __new_finish) - 1;    // °üÀ¨NULL
+        __new_finish = podstl::copy(__pos, end() + 1, __new_finish) - 1;    // åŒ…æ‹¬NULL
         _M_deallocate_block();
         _M_reset(__new_start, __new_finish, __new_start + __new_len);
     }
