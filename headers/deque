@@ -1,5 +1,11 @@
-// ±¾ÎÄ¼şÊÇ¶ÔÍâÍ·ÎÄ¼ş£¬ÔÊĞíÍâ²¿Ê¹ÓÃÕßÖ±½Ó°üº¬¡£
-// ±¾ÎÄ¼ş¶¨ÒåË«¶Ë¶ÓÁĞÈİÆ÷¡£
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2015-2019. All rights reserved.
+ * Description: æœ¬æ–‡ä»¶å®šä¹‰åŒç«¯é˜Ÿåˆ—å®¹å™¨ã€‚
+ * Author: é«˜å°š gaoshang@huawei.com
+ * Create: 2015-04-07
+ */
+
+// æœ¬æ–‡ä»¶æ˜¯å¯¹å¤–å¤´æ–‡ä»¶ï¼Œå…è®¸å¤–éƒ¨ä½¿ç”¨è€…ç›´æ¥åŒ…å«ã€‚
 
 #ifndef _PODSTL_DEQUE_H
 #define _PODSTL_DEQUE_H
@@ -386,7 +392,7 @@ private:
     void _M_initialize_dispatch(_Integer __count, _Integer __data, const _TrueType& /* _Integral */)
     {
         _M_initialize_map(__count, sizeof(value_type));
-        value_type __tmp_data = __data; // Æ¥ÅäÀàĞÍ
+        value_type __tmp_data = __data; // åŒ¹é…ç±»å‹
         _M_fill_initialize(&__tmp_data, sizeof(value_type), _FalseType());
     }
 
@@ -451,7 +457,7 @@ private:
     template <typename _Integer>
     void _M_assign_dispatch(_Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */)
     {
-        value_type __tmp_data = __data; // Æ¥ÅäÀàĞÍ
+        value_type __tmp_data = __data; // åŒ¹é…ç±»å‹
         _M_fill_assign(static_cast<size_type>(__count), &__tmp_data, sizeof(value_type));
     }
 
@@ -565,7 +571,7 @@ private:
     template <typename _Integer>
     void _M_insert_dispatch(iterator __pos, _Integer __count, _Integer __data, const _TrueType& /* _IsIntegral */)
     {
-        value_type __tmp_data = __data; // Æ¥ÅäÀàĞÍ
+        value_type __tmp_data = __data; // åŒ¹é…ç±»å‹
         _M_fill_insert(__pos, static_cast<size_type>(__count), &__tmp_data, sizeof(value_type));
     }
 
